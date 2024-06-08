@@ -1,103 +1,80 @@
-﻿using FluentValidation;
-using MaterialsExchange.Models;
+﻿using MaterialsExchange.Data;
+using MaterialsExchange.Interfaces;
+using MaterialsExchange.Models.DTO;
+using MaterialsExchange.Mappers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MaterialsExchange.Controllers
 {
-	[Route("api/[controller]")]
+    [Route("api/[controller]")]
 	[ApiController]
 	public class MaterialController : ControllerBase
 	{
+		private readonly AppDbContext _context;
+		private readonly IMaterialRepository _materialRepository;
+		public MaterialController(AppDbContext context, IMaterialRepository materialRepository)
+		{
+			_context = context;
+			_materialRepository = materialRepository;
+		}
+
 		[HttpGet]
 		[Route("all", Name = "GetAllMaterials")]
-		public ActionResult<IEnumerable<MaterialDto>> GetMaterials()
+		public async Task<ActionResult> GetAll()
 		{
-			var materials = MaterialsExchangeRepository.Materials.Select(m => new MaterialDto()
-			{
-				Id = m.Id,
-				Name = m.Name,
-				Price = m.Price,
-				SellerId = m.SellerId,
-			});
-
-			if (materials == null)
-			{
-				return NotFound();
-			}
-
-			return Ok(materials);
+			var materials = await _materialRepository.GetAllAsync();
+			var materialDtos = materials.Select(m => m.ToMaterialDto()).ToList();
+			return Ok(materialDtos);
 		}
 
 		[HttpGet]
 		[Route("{id:int}", Name = "GetMaterialById")]
-		public ActionResult<MaterialDto> GetMaterialById(int id)
+		public async Task<ActionResult> GetById(int id)
 		{
-			var material = MaterialsExchangeRepository.Materials.Where(m => m.Id == id).FirstOrDefault();
+			var material = await _materialRepository.GetByIdAsync(id);
 			
 			if (material == null)
 			{
 				return NotFound($"The material with id: {id} not found.");
 			}
 
-			var materialDto = new MaterialDto
-			{
-				Id = material.Id,
-				Name = material.Name,
-				Price = material.Price,
-				SellerId = material.SellerId,
-			};
+			var materialDto = material.ToMaterialDto();
 
 			return Ok(materialDto);
 		}
 
 		[HttpPost]
 		[Route("create")]
-		public ActionResult<MaterialDto> CreateMaterial([FromBody] MaterialDto model)
+		public async Task<ActionResult> Create([FromBody] MaterialDto materialDto)
 		{
-			int newId = MaterialsExchangeRepository.Materials.LastOrDefault().Id + 1;
-			
-			Material material = new Material
-			{
-				Id = newId,
-				Name = model.Name,
-				SellerId = model.SellerId,
-				Price = model.Price,
-			};
-			MaterialsExchangeRepository.Materials.Add(material);
-
-			model.Id = material.Id;
-
 			var validator = new MaterialDtoValidator();
-			var results = validator.Validate(model);
-
+			var results = validator.Validate(materialDto);
 			if (!results.IsValid)
 			{
 				return BadRequest(results.Errors);
 			}
 
-			return Ok(model);
+			var material = materialDto.ToMaterial();
+			await _materialRepository.CreateAsync(material);
+
+			return Ok(materialDto);
 		}
 
 		[HttpPut]
 		[Route("update")]
-		public ActionResult UpdateMaterial([FromBody] MaterialDto model)
+		public async Task<ActionResult> Update([FromBody] MaterialDto materialDto)
 		{
-			var material = MaterialsExchangeRepository.Materials.Where(m => m.Id == model.Id).FirstOrDefault();
-
-			if (material == null) {
-				return NotFound();
-			}
-			
-			material.Name = model.Name;
-			material.Price = model.Price;
-			material.SellerId = model.SellerId;
-
 			var validator = new MaterialDtoValidator();
-			var results = validator.Validate(model);
-
+			var results = validator.Validate(materialDto);
 			if (!results.IsValid)
 			{
 				return BadRequest(results.Errors);
+			}
+
+			var material = await _materialRepository.UpdateAsync(materialDto);
+
+			if (material == null) {
+				return NotFound();
 			}
 
 			return NoContent();
@@ -105,16 +82,14 @@ namespace MaterialsExchange.Controllers
 
 		[HttpDelete]
 		[Route("{id:int}", Name = "DeleteMaterialById")]
-		public ActionResult<bool> DeleteMaterial(int id)
+		public async Task<IActionResult> Delete(int id)
 		{
-			var material = MaterialsExchangeRepository.Materials.Where(n => n.Id == id).FirstOrDefault();
+			var material = await _materialRepository.DeleteAsync(id);
 
 			if (material == null)
 			{
 				return NotFound($"The material with id: {id} not found.");
 			}
-
-			MaterialsExchangeRepository.Materials.Remove(material);
 
 			return NoContent();
 		}

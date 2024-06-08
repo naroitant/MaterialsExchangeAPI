@@ -1,17 +1,28 @@
 using FluentValidation;
-using MaterialsExchange.Models;
+using MaterialsExchange.Data;
+using MaterialsExchange.Interfaces;
+using MaterialsExchange.Models.DTO;
+using MaterialsExchange.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddScoped<IValidator<MaterialDto>, MaterialDtoValidator>();
-builder.Services.AddScoped<IValidator<SellerDto>, SellerDtoValidator>();
+
+builder.Services.AddEntityFrameworkNpgsql().AddDbContext<AppDbContext>(options => {
+	options.UseNpgsql(builder.Configuration.GetConnectionString("defaultConnection"));
+});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<IMaterialRepository, MaterialRepository>();
+builder.Services.AddScoped<ISellerRepository, SellerRepository>();
+builder.Services.AddScoped<IValidator<MaterialDto>, MaterialDtoValidator>();
+builder.Services.AddScoped<IValidator<SellerDto>, SellerDtoValidator>();
 
 
 var app = builder.Build();
