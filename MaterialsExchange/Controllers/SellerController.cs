@@ -24,6 +24,7 @@ namespace MaterialsExchange.Controllers
 		{
 			var sellers = await _sellerRepository.GetAllAsync();
 			var sellerDtos = sellers.Select(s => s.ToSellerDto()).ToList();
+			
 			return Ok(sellerDtos);
 		}
 
@@ -32,7 +33,6 @@ namespace MaterialsExchange.Controllers
 		public async Task<ActionResult> GetById(int id)
 		{
 			var seller = await _sellerRepository.GetByIdAsync(id);
-
 			if (seller == null)
 			{
 				return NotFound($"The seller with id: {id} not found.");
@@ -74,7 +74,7 @@ namespace MaterialsExchange.Controllers
 			var seller = await _sellerRepository.UpdateAsync(sellerDto);
 			if (seller == null)
 			{
-				return NotFound();
+				return NotFound($"No seller found to update.");
 			}
 
 			return NoContent();

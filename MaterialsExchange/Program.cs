@@ -1,8 +1,11 @@
 using FluentValidation;
+using Hangfire;
+using Hangfire.PostgreSql;
 using MaterialsExchange.Data;
 using MaterialsExchange.Interfaces;
 using MaterialsExchange.Models.DTO;
 using MaterialsExchange.Repositories;
+using MaterialsExchange.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +22,9 @@ builder.Services.AddEntityFrameworkNpgsql().AddDbContext<AppDbContext>(options =
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddHangfire(x => x.UsePostgreSqlStorage(builder.Configuration.GetConnectionString("defaultConnection")));
+builder.Services.AddHangfireServer();
+
 builder.Services.AddScoped<IMaterialRepository, MaterialRepository>();
 builder.Services.AddScoped<ISellerRepository, SellerRepository>();
 builder.Services.AddScoped<IValidator<MaterialDto>, MaterialDtoValidator>();
@@ -33,6 +39,11 @@ if (app.Environment.IsDevelopment())
 	app.UseSwagger();
 	app.UseSwaggerUI();
 }
+
+app.UseHangfireDashboard();
+app.UseHangfireServer();
+
+app.StartRecurringJobs();
 
 app.UseHttpsRedirection();
 

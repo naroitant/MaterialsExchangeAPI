@@ -3,10 +3,11 @@ using MaterialsExchange.Interfaces;
 using MaterialsExchange.Models.DTO;
 using MaterialsExchange.Mappers;
 using Microsoft.AspNetCore.Mvc;
+using MediatR;
 
 namespace MaterialsExchange.Controllers
 {
-    [Route("api/[controller]")]
+	[Route("api/[controller]")]
 	[ApiController]
 	public class MaterialController : ControllerBase
 	{
@@ -24,6 +25,7 @@ namespace MaterialsExchange.Controllers
 		{
 			var materials = await _materialRepository.GetAllAsync();
 			var materialDtos = materials.Select(m => m.ToMaterialDto()).ToList();
+
 			return Ok(materialDtos);
 		}
 
@@ -32,7 +34,6 @@ namespace MaterialsExchange.Controllers
 		public async Task<ActionResult> GetById(int id)
 		{
 			var material = await _materialRepository.GetByIdAsync(id);
-			
 			if (material == null)
 			{
 				return NotFound($"The material with id: {id} not found.");
@@ -72,9 +73,9 @@ namespace MaterialsExchange.Controllers
 			}
 
 			var material = await _materialRepository.UpdateAsync(materialDto);
-
-			if (material == null) {
-				return NotFound();
+			if (material == null)
+			{
+				return NotFound($"No material found to update.");
 			}
 
 			return NoContent();
@@ -92,6 +93,27 @@ namespace MaterialsExchange.Controllers
 			}
 
 			return NoContent();
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> UpdateMaterialPrices()
+		{
+			var materials = await _materialRepository.GetAllAsync();
+
+			if (materials.Any())
+			{
+				Random rnd = new Random();
+				foreach (var material in materials)
+				{
+					material.Price = rnd.Next(1, 100);
+					MaterialDto materialDto = material.ToMaterialDto();
+					await _materialRepository.UpdateAsync(materialDto);
+				}
+
+				return Ok($"Material prices successfully updated.");
+			}
+
+			return NotFound($"No materials found to be updated.");
 		}
 	}
 }

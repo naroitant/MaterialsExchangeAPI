@@ -44,8 +44,6 @@ namespace MaterialsExchange.Repositories
 			}
 
 			seller = sellerDto.ToSeller();
-
-			await _context.Sellers.AddAsync(seller);
 			await _context.SaveChangesAsync();
 			return seller;
 		}

@@ -44,8 +44,6 @@ namespace MaterialsExchange.Repositories
 			}
 
             material = materialDto.ToMaterial();
-
-			await _context.Materials.AddAsync(material);
 			await _context.SaveChangesAsync();
 			return material;
 		}
