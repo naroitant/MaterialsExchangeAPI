@@ -1,81 +1,66 @@
-﻿using MaterialsExchange.Data;
-using MaterialsExchange.Interfaces;
-using MaterialsExchange.Models.DTO;
-using MaterialsExchange.Mappers;
-using Microsoft.AspNetCore.Mvc;
+﻿using MaterialsExchange.Features.Material.Commands;
+using MaterialsExchange.Features.Material.Query;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MaterialsExchange.Controllers
 {
-	[Route("api/[controller]")]
 	[ApiController]
+	[Route("api/[controller]")]
 	public class MaterialController : ControllerBase
 	{
-		private readonly AppDbContext _context;
-		private readonly IMaterialRepository _materialRepository;
-		public MaterialController(AppDbContext context, IMaterialRepository materialRepository)
+		private readonly IMediator _mediator;
+
+		public MaterialController(IMediator mediator)
 		{
-			_context = context;
-			_materialRepository = materialRepository;
+			_mediator = mediator;
 		}
 
 		[HttpGet]
 		[Route("all", Name = "GetAllMaterials")]
-		public async Task<ActionResult> GetAll()
+		public async Task<IActionResult> GetAll([FromQuery] GetAllMaterialsQuery request, CancellationToken token)
 		{
-			var materials = await _materialRepository.GetAllAsync();
-			var materialDtos = materials.Select(m => m.ToMaterialDto()).ToList();
+			var sellers = await _mediator.Send(request, token);
 
-			return Ok(materialDtos);
+			if (sellers == null)
+			{
+				return NotFound("No seller found.");
+			}
+
+			return Ok(sellers);
 		}
 
 		[HttpGet]
 		[Route("{id:int}", Name = "GetMaterialById")]
-		public async Task<ActionResult> GetById(int id)
+		public async Task<IActionResult> GetById([FromQuery] GetMaterialByIdQuery request, CancellationToken token)
 		{
-			var material = await _materialRepository.GetByIdAsync(id);
-			if (material == null)
+			var seller = await _mediator.Send(request, token);
+
+			if (seller == null)
 			{
-				return NotFound($"The material with id: {id} not found.");
+				return NotFound($"No seller found.");
 			}
 
-			var materialDto = material.ToMaterialDto();
-
-			return Ok(materialDto);
+			return Ok(seller);
 		}
 
 		[HttpPost]
 		[Route("create")]
-		public async Task<ActionResult> Create([FromBody] MaterialDto materialDto)
+		public async Task<IActionResult> Create([FromBody] CreateMaterialCommand command, CancellationToken token)
 		{
-			var validator = new MaterialDtoValidator();
-			var results = validator.Validate(materialDto);
-			if (!results.IsValid)
-			{
-				return BadRequest(results.Errors);
-			}
-
-			var material = materialDto.ToMaterial();
-			await _materialRepository.CreateAsync(material);
-
-			return Ok(materialDto);
+			var seller = await _mediator.Send(command, token);
+			return Ok(seller);
 		}
 
 		[HttpPut]
 		[Route("update")]
-		public async Task<ActionResult> Update([FromBody] MaterialDto materialDto)
+		public async Task<IActionResult> Update([FromBody] UpdateMaterialCommand command, CancellationToken token)
 		{
-			var validator = new MaterialDtoValidator();
-			var results = validator.Validate(materialDto);
-			if (!results.IsValid)
-			{
-				return BadRequest(results.Errors);
-			}
+			var seller = await _mediator.Send(command, token);
 
-			var material = await _materialRepository.UpdateAsync(materialDto);
-			if (material == null)
+			if (seller == null)
 			{
-				return NotFound($"No material found to update.");
+				return NotFound($"No seller found to update.");
 			}
 
 			return NoContent();
@@ -83,37 +68,30 @@ namespace MaterialsExchange.Controllers
 
 		[HttpDelete]
 		[Route("{id:int}", Name = "DeleteMaterialById")]
-		public async Task<IActionResult> Delete(int id)
+		public async Task<IActionResult> DeleteSeller([FromBody] DeleteMaterialCommand command, CancellationToken token)
 		{
-			var material = await _materialRepository.DeleteAsync(id);
+			var seller = await _mediator.Send(command, token);
 
-			if (material == null)
+			if (seller == null)
 			{
-				return NotFound($"The material with id: {id} not found.");
+				return NotFound($"The seller was not found.");
 			}
 
 			return NoContent();
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> UpdateMaterialPrices()
+		[Route("update-prices")]
+		public async Task<IActionResult> UpdatePrices([FromBody] UpdateMaterialPricesCommand command, CancellationToken token)
 		{
-			var materials = await _materialRepository.GetAllAsync();
+			var materials = await _mediator.Send(command, token);
 
-			if (materials.Any())
+			if (materials == null)
 			{
-				Random rnd = new Random();
-				foreach (var material in materials)
-				{
-					material.Price = rnd.Next(1, 100);
-					MaterialDto materialDto = material.ToMaterialDto();
-					await _materialRepository.UpdateAsync(materialDto);
-				}
-
-				return Ok($"Material prices successfully updated.");
+				return NotFound($"No materials found to be updated.");
 			}
 
-			return NotFound($"No materials found to be updated.");
+			return Ok($"Material prices successfully updated.");
 		}
 	}
 }

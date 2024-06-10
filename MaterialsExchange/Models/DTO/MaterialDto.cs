@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MaterialsExchange.Models.DTO
 {

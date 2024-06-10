@@ -7,7 +7,7 @@ namespace MaterialsExchange.Interfaces
 	{
 		Task<List<Seller>> GetAllAsync();
 		Task<Seller?> GetByIdAsync(int id);
-		Task<Seller> CreateAsync(Seller seller);
+		Task<Seller> CreateAsync(SellerDto sellerDto);
 		Task<Seller?> UpdateAsync(SellerDto sellerDto);
 		Task<Seller?> DeleteAsync(int id);
 	}

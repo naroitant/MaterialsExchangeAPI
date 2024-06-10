@@ -1,77 +1,63 @@
-﻿using MaterialsExchange.Data;
-using MaterialsExchange.Interfaces;
-using MaterialsExchange.Mappers;
-using MaterialsExchange.Models.DTO;
+﻿using MaterialsExchange.Features.Seller.Commands;
+using MaterialsExchange.Features.Seller.Query;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MaterialsExchange.Controllers
 {
-    [Route("api/[controller]")]
-	[ApiController]
+    [ApiController]
+	[Route("api/[controller]")]
 	public class SellerController : ControllerBase
 	{
-		private readonly AppDbContext _context;
-		private readonly ISellerRepository _sellerRepository;
-		public SellerController(AppDbContext context, ISellerRepository sellerRepository)
+		private readonly IMediator _mediator;
+
+		public SellerController(IMediator mediator)
 		{
-			_context = context;
-			_sellerRepository = sellerRepository;
+			_mediator = mediator;
 		}
 
 		[HttpGet]
 		[Route("all", Name = "GetAllSellers")]
-		public async Task<ActionResult> GetAll()
+		public async Task<IActionResult> GetAll([FromQuery] GetAllSellersQuery request, CancellationToken token)
 		{
-			var sellers = await _sellerRepository.GetAllAsync();
-			var sellerDtos = sellers.Select(s => s.ToSellerDto()).ToList();
+			var sellers = await _mediator.Send(request, token);
 			
-			return Ok(sellerDtos);
+			if (sellers == null)
+			{
+				return NotFound("No seller found.");
+			}
+			
+			return Ok(sellers);
 		}
 
 		[HttpGet]
 		[Route("{id:int}", Name = "GetSellerById")]
-		public async Task<ActionResult> GetById(int id)
+		public async Task<IActionResult> GetById([FromQuery] GetSellerByIdQuery request, CancellationToken token)
 		{
-			var seller = await _sellerRepository.GetByIdAsync(id);
+			var seller = await _mediator.Send(request, token);
+			
 			if (seller == null)
 			{
-				return NotFound($"The seller with id: {id} not found.");
+				return NotFound($"No seller found.");
 			}
-
-			var sellerDto = seller.ToSellerDto();
-
-			return Ok(sellerDto);
+			
+			return Ok(seller);
 		}
 
 		[HttpPost]
 		[Route("create")]
-		public async Task<ActionResult> Create([FromBody] SellerDto sellerDto)
+		public async Task<IActionResult> Create([FromBody] CreateSellerCommand command, CancellationToken token)
 		{
-			var validator = new SellerDtoValidator();
-			var results = validator.Validate(sellerDto);
-			if (!results.IsValid)
-			{
-				return BadRequest(results.Errors);
-			}
-
-			var seller = sellerDto.ToSeller();
-			await _sellerRepository.CreateAsync(seller);
-
-			return Ok(sellerDto);
+			var seller = await _mediator.Send(command, token);
+			return Ok(seller);
 		}
 
 		[HttpPut]
 		[Route("update")]
-		public async Task<ActionResult> Update([FromBody] SellerDto sellerDto)
+		public async Task<IActionResult> Update([FromBody] UpdateSellerCommand command, CancellationToken token)
 		{
-			var validator = new SellerDtoValidator();
-			var results = validator.Validate(sellerDto);
-			if (!results.IsValid)
-			{
-				return BadRequest(results.Errors);
-			}
-
-			var seller = await _sellerRepository.UpdateAsync(sellerDto);
+			var seller = await _mediator.Send(command, token);
+			
 			if (seller == null)
 			{
 				return NotFound($"No seller found to update.");
@@ -82,13 +68,13 @@ namespace MaterialsExchange.Controllers
 
 		[HttpDelete]
 		[Route("{id:int}", Name = "DeleteSellerById")]
-		public async Task<IActionResult> DeleteSeller(int id)
+		public async Task<IActionResult> Delete([FromBody] DeleteSellerCommand command, CancellationToken token)
 		{
-			var seller = await _sellerRepository.DeleteAsync(id);
+			var seller = await _mediator.Send(command, token);
 
 			if (seller == null)
 			{
-				return NotFound($"The seller with id: {id} not found.");
+				return NotFound($"The seller was not found.");
 			}
 
 			return NoContent();

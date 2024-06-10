@@ -1,5 +1,6 @@
 ﻿using Hangfire;
 using MaterialsExchange.Controllers;
+using MaterialsExchange.Features.Material.Commands;
 
 namespace MaterialsExchange.Tasks
 {
@@ -7,7 +8,9 @@ namespace MaterialsExchange.Tasks
 	{
 		public static void StartRecurringJobs(this IApplicationBuilder app)
 		{
-			RecurringJob.AddOrUpdate<MaterialController>("UpdateMaterialPrices", x => x.UpdateMaterialPrices(), "0 8 * * *");
+			UpdateMaterialPricesCommand command = new UpdateMaterialPricesCommand();
+			CancellationToken token = new CancellationToken();
+			RecurringJob.AddOrUpdate<MaterialController>("UpdatePrices", x => x.UpdatePrices(command, token), "* * * * *");
 		}
 	}
 }

@@ -27,23 +27,23 @@ namespace MaterialsExchange.Repositories
 			return seller;
 		}
 
-		public async Task<Seller> CreateAsync(Seller seller)
+		public async Task<Seller> CreateAsync(SellerDto sellerDto)
         {
-            await _context.Sellers.AddAsync(seller);
+			var seller = sellerDto.ToSeller();
+			await _context.Sellers.AddAsync(seller);
             await _context.SaveChangesAsync();
             return seller;
         }
 
 		public async Task<Seller?> UpdateAsync(SellerDto sellerDto)
 		{
-            var seller = await _context.Sellers.FirstOrDefaultAsync(m => m.Id == sellerDto.Id);
+            var seller = sellerDto.ToSeller();
 
 			if (seller == null)
 			{
 				return null;
 			}
 
-			seller = sellerDto.ToSeller();
 			await _context.SaveChangesAsync();
 			return seller;
 		}

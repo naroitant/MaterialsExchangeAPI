@@ -27,8 +27,9 @@ namespace MaterialsExchange.Repositories
 			return material;
 		}
 
-		public async Task<Material> CreateAsync(Material material)
+		public async Task<Material> CreateAsync(MaterialDto materialDto)
         {
+            var material = materialDto.ToMaterial();
             await _context.Materials.AddAsync(material);
             await _context.SaveChangesAsync();
             return material;
@@ -36,14 +37,13 @@ namespace MaterialsExchange.Repositories
 
 		public async Task<Material?> UpdateAsync(MaterialDto materialDto)
 		{
-            var material = await _context.Materials.FirstOrDefaultAsync(m => m.Id == materialDto.Id);
+            var material = materialDto.ToMaterial();
 
 			if (material == null)
 			{
 				return null;
 			}
 
-            material = materialDto.ToMaterial();
 			await _context.SaveChangesAsync();
 			return material;
 		}
