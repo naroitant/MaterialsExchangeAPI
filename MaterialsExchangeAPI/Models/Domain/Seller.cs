@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MaterialsExchange.Models.Domain
+namespace MaterialsExchangeAPI.Models.Domain
 {
     [Table("sellers")]
     public class Seller

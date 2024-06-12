@@ -1,50 +1,78 @@
 using FluentValidation;
 using Hangfire;
 using Hangfire.PostgreSql;
-using MaterialsExchange.Data;
-using MaterialsExchange.Interfaces;
-using MaterialsExchange.Models.DTO;
-using MaterialsExchange.Repositories;
-using MaterialsExchange.Tasks;
+using MaterialsExchangeAPI.Data;
+using MaterialsExchangeAPI.Interfaces;
+using MaterialsExchangeAPI.Repositories;
+using MaterialsExchangeAPI.Tasks;
+using MaterialsExchangeAPI.Behaviors;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
 builder.Services.AddControllers();
 
-builder.Services.AddEntityFrameworkNpgsql().AddDbContext<AppDbContext>(options => {
-	options.UseNpgsql(builder.Configuration.GetConnectionString("defaultConnection"));
+builder.Services.AddDbContext<AppDbContext>(options => {
+    options.UseNpgsql(builder.Configuration.GetConnectionString("defaultConnection"));
 });
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// Настраиваем Swagger.
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    var basePath = AppContext.BaseDirectory;
+    var xmlPath = Path.Combine(basePath, "MaterialsExchangeAPI.xml");
 
-builder.Services.AddHangfire(x => x.UsePostgreSqlStorage(builder.Configuration.GetConnectionString("defaultConnection")));
+    options.IncludeXmlComments(xmlPath);
+});
+builder.Services.ConfigureSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Version = "v1",
+        Title = "MaterialsExchangeAPI",
+        Description = "ASP.NET Core Web API для биржи материалов",
+    });
+});
+
+// Настраиваем Hangfire.
+builder.Services.AddHangfire(
+    x => x.UsePostgreSqlStorage(options => options.UseNpgsqlConnection(
+        builder.Configuration.GetConnectionString("defaultConnection")))
+);
 builder.Services.AddHangfireServer();
 
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+// Настраиваем MediatR.
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+    cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+});
 
 builder.Services.AddScoped<IMaterialRepository, MaterialRepository>();
 builder.Services.AddScoped<ISellerRepository, SellerRepository>();
-builder.Services.AddScoped<IValidator<MaterialDto>, MaterialDtoValidator>();
-builder.Services.AddScoped<IValidator<SellerDto>, SellerDtoValidator>();
+
+// Регистрируем все валидаторы из выполняемой сборки.
+builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-	app.UseSwagger();
-	app.UseSwaggerUI();
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+    });
 }
 
 app.UseHangfireDashboard();
-app.UseHangfireServer();
 
+// Запускаем повторяемые задачи Hangfire.
 app.StartRecurringJobs();
 
 app.UseHttpsRedirection();

@@ -1,7 +1,6 @@
-﻿using FluentValidation;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace MaterialsExchange.Models.DTO
+namespace MaterialsExchangeAPI.Models.DTO
 {
     public class SellerDto
     {
@@ -9,14 +8,5 @@ namespace MaterialsExchange.Models.DTO
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
-    }
-
-    public class SellerDtoValidator : AbstractValidator<SellerDto>
-    {
-        public SellerDtoValidator()
-        {
-            RuleFor(s => s.Id).NotNull();
-            RuleFor(s => s.Name).NotEmpty();
-        }
     }
 }

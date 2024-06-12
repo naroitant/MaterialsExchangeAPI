@@ -1,97 +1,168 @@
-﻿using MaterialsExchange.Features.Material.Commands;
-using MaterialsExchange.Features.Material.Query;
+﻿using MaterialsExchangeAPI.Features.Material.Commands.CreateMaterialCommand;
+using MaterialsExchangeAPI.Features.Material.Commands.DeleteMaterialCommand;
+using MaterialsExchangeAPI.Features.Material.Commands.UpdateMaterialCommand;
+using MaterialsExchangeAPI.Features.Material.Commands.UpdateMaterialPricesCommand;
+using MaterialsExchangeAPI.Features.Material.Queries.GetAllMaterialsQuery;
+using MaterialsExchangeAPI.Features.Material.Queries.GetMaterialByIdQuery;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MaterialsExchange.Controllers
+namespace MaterialsExchangeAPI.Controllers
 {
-	[ApiController]
-	[Route("api/[controller]")]
-	public class MaterialController : ControllerBase
-	{
-		private readonly IMediator _mediator;
+    [Route("api/[controller]")]
+    [ApiController]
+    public class MaterialController : ControllerBase
+    {
+        private readonly IMediator _mediator;
 
-		public MaterialController(IMediator mediator)
-		{
-			_mediator = mediator;
-		}
+        public MaterialController(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
 
-		[HttpGet]
-		[Route("all", Name = "GetAllMaterials")]
-		public async Task<IActionResult> GetAll([FromQuery] GetAllMaterialsQuery request, CancellationToken token)
-		{
-			var sellers = await _mediator.Send(request, token);
+        /// <summary>
+        /// Получение всех материалов
+        /// </summary>
+        /// <returns>Все материалы</returns>
+        /// <response code="200">Возвращает все материалы</response>
+        /// <response code="404">Материалов не найдено</response>
+        [HttpGet]
+        [Route("all")]
+        public async Task<IActionResult> GetAll()
+        {
+            var materials = await _mediator.Send(new GetAllMaterialsQuery());
 
-			if (sellers == null)
-			{
-				return NotFound("No seller found.");
-			}
+            if (materials == null)
+            {
+                return NotFound("No material found.");
+            }
 
-			return Ok(sellers);
-		}
+            return Ok(materials);
+        }
 
-		[HttpGet]
-		[Route("{id:int}", Name = "GetMaterialById")]
-		public async Task<IActionResult> GetById([FromQuery] GetMaterialByIdQuery request, CancellationToken token)
-		{
-			var seller = await _mediator.Send(request, token);
+        /// <summary>
+        /// Получение материала по id
+        /// </summary>
+        /// <param name="id">Уникальный идентификатор материала</param>
+        /// <returns>Материал</returns>
+        /// <response code="200">Возвращает материал</response>
+        /// <response code="404">Материал не найден</response>
+        [HttpGet]
+        [Route("{id:int}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var material = await _mediator.Send(new GetMaterialByIdQuery() { Id = id });
 
-			if (seller == null)
-			{
-				return NotFound($"No seller found.");
-			}
+            if (material == null)
+            {
+                return NotFound($"No material found.");
+            }
 
-			return Ok(seller);
-		}
+            return Ok(material);
+        }
 
-		[HttpPost]
-		[Route("create")]
-		public async Task<IActionResult> Create([FromBody] CreateMaterialCommand command, CancellationToken token)
-		{
-			var seller = await _mediator.Send(command, token);
-			return Ok(seller);
-		}
+        /// <summary>
+        /// Создание материала
+        /// </summary>
+        /// <remarks>
+        /// Пример запроса:
+        /// 
+        ///     POST /Material
+        ///     {
+        ///        "id" : 1,
+        ///        "name" : "Sand",
+        ///        "price" : 1000,
+        ///        "sellerId" : 1,
+        ///     }
+        ///
+        /// </remarks>
+        /// <param name="name">Название материала</param>
+        /// <param name="price">Стоимость материала</param>
+        /// <param name="sellerId">Уникальный идентификатор продавца</param>
+        /// <returns>Новый материал</returns>
+        /// <response code="201">Возвращает новый материал</response>
+        /// <response code="400">Некорректно введены данные</response>
+        /// <response code="500">Некорректно введены данные</response>
+        [HttpPost]
+        [Route("create")]
+        public async Task<IActionResult> Create(string name, decimal price, int sellerId)
+        {
+            var material = await _mediator.Send(new CreateMaterialCommand() { 
+                Name = name, Price = price, SellerId = sellerId
+            });
 
-		[HttpPut]
-		[Route("update")]
-		public async Task<IActionResult> Update([FromBody] UpdateMaterialCommand command, CancellationToken token)
-		{
-			var seller = await _mediator.Send(command, token);
+            if (material == null)
+            {
+                return BadRequest(material);
+            }
 
-			if (seller == null)
-			{
-				return NotFound($"No seller found to update.");
-			}
+            return CreatedAtAction(nameof(Create), new { id = material.Id }, material);
+        }
 
-			return NoContent();
-		}
+        /// <summary>
+        /// Обновление информации о материале
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="name">Название материала</param>
+        /// <param name="price">Стоимость материала</param>
+        /// <param name="sellerId">Уникальный идентификатор продавца</param>
+        /// <returns>Обновлённый материал</returns>
+        /// <response code="200">Возвращает обновлённый материал</response>
+        /// <response code="404">Материал не найден</response>
+        /// <response code="500">Некорректно введены данные</response>
+        [HttpPut]
+        [Route("update")]
+        public async Task<IActionResult> Update(int id, string name, decimal price, int sellerId)
+        {
+            var material = await _mediator.Send(new UpdateMaterialCommand() { 
+                Id = id, Name = name, Price = price, SellerId = sellerId
+            });
 
-		[HttpDelete]
-		[Route("{id:int}", Name = "DeleteMaterialById")]
-		public async Task<IActionResult> DeleteSeller([FromBody] DeleteMaterialCommand command, CancellationToken token)
-		{
-			var seller = await _mediator.Send(command, token);
+            if (material == null)
+            {
+                return NotFound($"No material found.");
+            }
 
-			if (seller == null)
-			{
-				return NotFound($"The seller was not found.");
-			}
+            return Ok(material);
+        }
 
-			return NoContent();
-		}
+        /// <summary>
+        /// Удаление материала
+        /// </summary>
+        /// <param name="id">Уникальный идентификатор материала</param>
+        /// <response code="204">Материал успешно удалён</response>
+        /// <response code="404">Материал не найден</response>
+        [HttpDelete]
+        [Route("{id:int}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var material = await _mediator.Send(new DeleteMaterialCommand() { Id = id });
 
-		[HttpPost]
-		[Route("update-prices")]
-		public async Task<IActionResult> UpdatePrices([FromBody] UpdateMaterialPricesCommand command, CancellationToken token)
-		{
-			var materials = await _mediator.Send(command, token);
+            if (material == null)
+            {
+                return NotFound($"No material found.");
+            }
 
-			if (materials == null)
-			{
-				return NotFound($"No materials found to be updated.");
-			}
+            return NoContent();
+        }
 
-			return Ok($"Material prices successfully updated.");
-		}
-	}
+        /// <summary>
+        /// Обновление цен материалов
+        /// </summary>
+        /// <response code="200">Цены материалов успешно обновлены</response>
+        /// <response code="404">Материалов не найдено</response>
+        [HttpPut]
+        [Route("update-prices")]
+        public async Task<IActionResult> UpdatePrices()
+        {
+            var materials = await _mediator.Send(new UpdateMaterialPricesCommand());
+
+            if (materials == null)
+            {
+                return NotFound($"No materials found.");
+            }
+
+            return Ok($"Material prices successfully updated.");
+        }
+    }
 }
