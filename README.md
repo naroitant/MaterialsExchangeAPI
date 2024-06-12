@@ -1,2 +1,2 @@
-# MaterialExchangeAPI
-An ASP.NET Core Web Api for a materials exchange.
+# MaterialsExchangeAPI
+An ASP.NET Core Web API for a materials exchange.
