@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>MaterialsExchangeAPI</name>
+        <name>Web</name>
     </assembly>
     <members>
-        <member name="M:MaterialsExchangeAPI.Controllers.MaterialController.GetAll">
+        <member name="M:MaterialsExchangeAPI.Web.Endpoints.Materials.GetAll">
             <summary>
             Получение всех материалов
             </summary>
@@ -12,7 +12,7 @@
             <response code="200">Возвращает все материалы</response>
             <response code="404">Материалов не найдено</response>
         </member>
-        <member name="M:MaterialsExchangeAPI.Controllers.MaterialController.GetById(System.Int32)">
+        <member name="M:MaterialsExchangeAPI.Web.Endpoints.Materials.GetById(System.Int32)">
             <summary>
             Получение материала по id
             </summary>
@@ -21,7 +21,7 @@
             <response code="200">Возвращает материал</response>
             <response code="404">Материал не найден</response>
         </member>
-        <member name="M:MaterialsExchangeAPI.Controllers.MaterialController.Create(System.String,System.Decimal,System.Int32)">
+        <member name="M:MaterialsExchangeAPI.Web.Endpoints.Materials.Create(System.String,System.Decimal,System.Int32)">
              <summary>
              Создание материала
              </summary>
@@ -30,10 +30,9 @@
              
                  POST /Material
                  {
-                    "id" : 1,
                     "name" : "Sand",
                     "price" : 1000,
-                    "sellerId" : 1,
+                    "sellerId" : 1
                  }
             
              </remarks>
@@ -45,7 +44,7 @@
              <response code="400">Некорректно введены данные</response>
              <response code="500">Некорректно введены данные</response>
         </member>
-        <member name="M:MaterialsExchangeAPI.Controllers.MaterialController.Update(System.Int32,System.String,System.Decimal,System.Int32)">
+        <member name="M:MaterialsExchangeAPI.Web.Endpoints.Materials.Update(System.Int32,System.String,System.Decimal,System.Int32)">
             <summary>
             Обновление информации о материале
             </summary>
@@ -58,7 +57,7 @@
             <response code="404">Материал не найден</response>
             <response code="500">Некорректно введены данные</response>
         </member>
-        <member name="M:MaterialsExchangeAPI.Controllers.MaterialController.Delete(System.Int32)">
+        <member name="M:MaterialsExchangeAPI.Web.Endpoints.Materials.Delete(System.Int32)">
             <summary>
             Удаление материала
             </summary>
@@ -66,14 +65,14 @@
             <response code="204">Материал успешно удалён</response>
             <response code="404">Материал не найден</response>
         </member>
-        <member name="M:MaterialsExchangeAPI.Controllers.MaterialController.UpdatePrices">
+        <member name="M:MaterialsExchangeAPI.Web.Endpoints.Materials.UpdatePrices(MaterialsExchangeAPI.Application.Materials.Commands.UpdateMaterialPrices.UpdateMaterialPricesCommand)">
             <summary>
             Обновление цен материалов
             </summary>
             <response code="200">Цены материалов успешно обновлены</response>
             <response code="404">Материалов не найдено</response>
         </member>
-        <member name="M:MaterialsExchangeAPI.Controllers.SellerController.GetAll">
+        <member name="M:MaterialsExchangeAPI.Web.Endpoints.Sellers.GetAll">
             <summary>
             Получение всех продавцов
             </summary>
@@ -81,7 +80,7 @@
             <response code="200">Возвращает всех продавцов</response>
             <response code="404">Продавцов не найдено</response>
         </member>
-        <member name="M:MaterialsExchangeAPI.Controllers.SellerController.GetById(System.Int32)">
+        <member name="M:MaterialsExchangeAPI.Web.Endpoints.Sellers.GetById(System.Int32)">
             <summary>
             Получение продавца по id
             </summary>
@@ -90,7 +89,7 @@
             <response code="200">Возвращает продавца</response>
             <response code="404">Продавец не найден</response>
         </member>
-        <member name="M:MaterialsExchangeAPI.Controllers.SellerController.Create(System.String)">
+        <member name="M:MaterialsExchangeAPI.Web.Endpoints.Sellers.Create(System.String)">
              <summary>
              Создание продавца
              </summary>
@@ -99,7 +98,6 @@
             
                  POST /Seller
                  {
-                    "id" : 1,
                     "name" : "Martin"
                  }
             
@@ -109,7 +107,7 @@
              <response code="201">Возвращает нового продавца</response>
              <response code="400">Некорректно введены данные</response>
         </member>
-        <member name="M:MaterialsExchangeAPI.Controllers.SellerController.Update(System.Int32,System.String)">
+        <member name="M:MaterialsExchangeAPI.Web.Endpoints.Sellers.Update(System.Int32,System.String)">
             <summary>
             Обновление информации о продавце
             </summary>
@@ -120,150 +118,13 @@
             <response code="400">Некорректно введены данные</response>
             <response code="404">Продавец не найден</response>
         </member>
-        <member name="M:MaterialsExchangeAPI.Controllers.SellerController.Delete(System.Int32)">
+        <member name="M:MaterialsExchangeAPI.Web.Endpoints.Sellers.Delete(System.Int32)">
             <summary>
             Удаление продавца
             </summary>
             <param name="id">Уникальный идентификатор продавца</param>
             <response code="204">Продавец успешно удалён</response>
             <response code="404">Продавец не найден</response>
-        </member>
-        <member name="T:MaterialsExchangeAPI.Features.Material.Commands.CreateMaterialCommand.CreateMaterialCommand">
-            <summary>
-            Команда создания материала
-            </summary>
-        </member>
-        <member name="P:MaterialsExchangeAPI.Features.Material.Commands.CreateMaterialCommand.CreateMaterialCommand.Name">
-            <summary>
-            Название материала
-            </summary>
-        </member>
-        <member name="P:MaterialsExchangeAPI.Features.Material.Commands.CreateMaterialCommand.CreateMaterialCommand.Price">
-            <summary>
-            Стоимость материала
-            </summary>
-        </member>
-        <member name="P:MaterialsExchangeAPI.Features.Material.Commands.CreateMaterialCommand.CreateMaterialCommand.SellerId">
-            <summary>
-            Уникальный идентификатор продавца
-            </summary>
-        </member>
-        <member name="T:MaterialsExchangeAPI.Features.Material.Commands.DeleteMaterialCommand.DeleteMaterialCommand">
-            <summary>
-            Команда удаления материала
-            </summary>
-        </member>
-        <member name="P:MaterialsExchangeAPI.Features.Material.Commands.DeleteMaterialCommand.DeleteMaterialCommand.Id">
-            <summary>
-            Уникальный идентификатор материала
-            </summary>
-        </member>
-        <member name="T:MaterialsExchangeAPI.Features.Material.Commands.UpdateMaterialCommand.UpdateMaterialCommand">
-            <summary>
-            Команда обновления информации о материале
-            </summary>
-        </member>
-        <member name="P:MaterialsExchangeAPI.Features.Material.Commands.UpdateMaterialCommand.UpdateMaterialCommand.Id">
-            <summary>
-            Уникальный идентификатор материала
-            </summary>
-        </member>
-        <member name="P:MaterialsExchangeAPI.Features.Material.Commands.UpdateMaterialCommand.UpdateMaterialCommand.Name">
-            <summary>
-            Название материала
-            </summary>
-        </member>
-        <member name="P:MaterialsExchangeAPI.Features.Material.Commands.UpdateMaterialCommand.UpdateMaterialCommand.Price">
-            <summary>
-            Стоимость материала
-            </summary>
-        </member>
-        <member name="P:MaterialsExchangeAPI.Features.Material.Commands.UpdateMaterialCommand.UpdateMaterialCommand.SellerId">
-            <summary>
-            Уникальный идентификатор продавца
-            </summary>
-        </member>
-        <member name="T:MaterialsExchangeAPI.Features.Material.Commands.UpdateMaterialPricesCommand.UpdateMaterialPricesCommand">
-            <summary>
-            Команда обновления цен материалов
-            </summary>
-        </member>
-        <member name="T:MaterialsExchangeAPI.Features.Material.Queries.GetAllMaterialsQuery.GetAllMaterialsQuery">
-            <summary>
-            Запрос на получение всех материалов
-            </summary>
-        </member>
-        <member name="T:MaterialsExchangeAPI.Features.Material.Queries.GetMaterialByIdQuery.GetMaterialByIdQuery">
-            <summary>
-            Запрос на получение материала по id
-            </summary>
-        </member>
-        <member name="P:MaterialsExchangeAPI.Features.Material.Queries.GetMaterialByIdQuery.GetMaterialByIdQuery.Id">
-            <summary>
-            Уникальный идентификатор материала
-            </summary>
-        </member>
-        <member name="T:MaterialsExchangeAPI.Features.Seller.Commands.CreateSellerCommand.CreateSellerCommand">
-            <summary>
-            Команда создания продавца
-            </summary>
-        </member>
-        <member name="P:MaterialsExchangeAPI.Features.Seller.Commands.CreateSellerCommand.CreateSellerCommand.Name">
-            <summary>
-            Имя продавца
-            </summary>
-        </member>
-        <member name="T:MaterialsExchangeAPI.Features.Seller.Commands.DeleteSellerCommand.DeleteSellerCommand">
-            <summary>
-            Команда удаления продавца
-            </summary>
-        </member>
-        <member name="P:MaterialsExchangeAPI.Features.Seller.Commands.DeleteSellerCommand.DeleteSellerCommand.Id">
-            <summary>
-            Уникальный идентификатор продавца
-            </summary>
-        </member>
-        <member name="T:MaterialsExchangeAPI.Features.Seller.Commands.UpdateSellerCommand.UpdateSellerCommand">
-            <summary>
-            Команда обновления продавца
-            </summary>
-        </member>
-        <member name="P:MaterialsExchangeAPI.Features.Seller.Commands.UpdateSellerCommand.UpdateSellerCommand.Id">
-            <summary>
-            Уникальный идентификатор продавца
-            </summary>
-        </member>
-        <member name="P:MaterialsExchangeAPI.Features.Seller.Commands.UpdateSellerCommand.UpdateSellerCommand.Name">
-            <summary>
-            Имя продавца
-            </summary>
-        </member>
-        <member name="T:MaterialsExchangeAPI.Features.Seller.Queries.GetAllSellersQuery.GetAllSellersQuery">
-            <summary>
-            Запрос на получение всех продавцов
-            </summary>
-        </member>
-        <member name="T:MaterialsExchangeAPI.Features.Seller.Queries.GetSellerByIdQuery.GetSellerByIdQuery">
-            <summary>
-            Запрос на получение продавца по id
-            </summary>
-        </member>
-        <member name="P:MaterialsExchangeAPI.Features.Seller.Queries.GetSellerByIdQuery.GetSellerByIdQuery.Id">
-            <summary>
-            Уникальный идентификатор продавца
-            </summary>
-        </member>
-        <member name="T:MaterialsExchangeAPI.Migrations.myMigration">
-            <inheritdoc />
-        </member>
-        <member name="M:MaterialsExchangeAPI.Migrations.myMigration.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:MaterialsExchangeAPI.Migrations.myMigration.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:MaterialsExchangeAPI.Migrations.myMigration.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
         </member>
     </members>
 </doc>
