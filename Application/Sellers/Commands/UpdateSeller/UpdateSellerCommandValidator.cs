@@ -1,13 +1,10 @@
-﻿using FluentValidation;
+﻿namespace MaterialsExchangeAPI.Application.Sellers.Commands.UpdateSeller;
 
-namespace MaterialsExchangeAPI.Features.Seller.Commands.UpdateSellerCommand
+public class DeleteSellerCommandValidator : AbstractValidator<UpdateSellerCommand>
 {
-    public class UpdateSellerCommandValidator : AbstractValidator<UpdateSeller>
+    public DeleteSellerCommandValidator()
     {
-        public UpdateSellerCommandValidator()
-        {
-            RuleFor(m => m.Id).NotNull();
-            RuleFor(m => m.Name).NotEmpty();
-        }
+        RuleFor(m => m.Id).NotNull();
+        RuleFor(m => m.Name).NotEmpty();
     }
 }

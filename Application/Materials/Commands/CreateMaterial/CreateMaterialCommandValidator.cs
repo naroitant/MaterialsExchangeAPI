@@ -1,8 +1,7 @@
-﻿using FluentValidation;
+﻿namespace MaterialsExchangeAPI.Application.Materials.Commands.CreateMaterial;
 
-namespace MaterialsExchangeAPI.Features.Material.Commands.CreateMaterialCommand;
-
-public class CreateMaterialCommandValidator : AbstractValidator<CreateMaterial>
+public class CreateMaterialCommandValidator
+    : AbstractValidator<CreateMaterialCommand>
 {
     public CreateMaterialCommandValidator()
     {

@@ -1,12 +1,10 @@
-﻿using FluentValidation;
+﻿namespace MaterialsExchangeAPI.Application.Sellers.Commands.CreateSeller;
 
-namespace MaterialsExchangeAPI.Features.Seller.Commands.CreateSellerCommand
+public class CreateSellerCommandValidator
+    : AbstractValidator<CreateSellerCommand>
 {
-    public class CreateSellerCommandValidator : AbstractValidator<CreateSeller>
+    public CreateSellerCommandValidator()
     {
-        public CreateSellerCommandValidator()
-        {
-            RuleFor(m => m.Name).NotEmpty();
-        }
+        RuleFor(m => m.Name).NotEmpty();
     }
 }

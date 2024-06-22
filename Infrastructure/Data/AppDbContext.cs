@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace MaterialsExchangeAPI.Infrastructure.Data;
 
-public class AppDbContext : IAppDbContext
+public class AppDbContext : DbContext, IAppDbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options) { }

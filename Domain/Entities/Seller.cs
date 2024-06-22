@@ -1,8 +1,14 @@
-﻿namespace MaterialsExchangeAPI.Domain.Entities;
+﻿using MaterialsExchangeAPI.Domain.Common;
+using System.ComponentModel.DataAnnotations.Schema;
 
-public class Seller
+namespace MaterialsExchangeAPI.Domain.Entities;
+
+[Table("sellers")]
+public class Seller : BaseEntity
 {
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public List<Material> Materials { get; set; } = new List<Material>();
+    public string? Name { get; set; }
+    public List<Material>? Materials
+    {
+        get; set;
+    }
 }
