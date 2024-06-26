@@ -36,7 +36,7 @@ public class GetSellerByIdQueryHandler
         }
 
         var getSellerResponseDto = seller.ToGetSellerResponseDto();
-        
+
         return getSellerResponseDto;
     }
 }

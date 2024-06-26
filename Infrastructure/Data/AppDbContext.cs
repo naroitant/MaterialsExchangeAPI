@@ -19,7 +19,6 @@ public class AppDbContext : DbContext, IAppDbContext
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
         builder.Entity<Material>(x => x.HasKey(m => new { m.Id }));
-
         builder.Entity<Material>()
             .HasOne(u => u.Seller)
             .WithMany(u => u.Materials)

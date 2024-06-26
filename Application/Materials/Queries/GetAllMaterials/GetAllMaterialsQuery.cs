@@ -22,7 +22,7 @@ public class GetAllMaterialsQueryHandler
         GetAllMaterialsQuery request, CancellationToken token)
     {
         var materials = await _context.Materials.ToListAsync(
-            cancellationToken: token);
+                cancellationToken: token);
         var getMaterialResponseDtos =
             materials.Select(m => m.ToGetMaterialResponseDto()).ToList();
 

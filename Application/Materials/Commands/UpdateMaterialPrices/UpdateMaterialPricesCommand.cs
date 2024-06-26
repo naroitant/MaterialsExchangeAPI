@@ -22,7 +22,7 @@ public class UpdateMaterialPricesCommandHandler
     public async Task<List<UpdateMaterialPriceResponseDto>> Handle(
         UpdateMaterialPricesCommand command, CancellationToken token)
     {
-        var materials = 
+        var materials =
             await _context.Materials.ToListAsync(cancellationToken: token);
         var updateMaterialPriceResponseDtos =
             new List<UpdateMaterialPriceResponseDto>();
@@ -38,10 +38,12 @@ public class UpdateMaterialPricesCommandHandler
             {
                 material.Price = rnd.Next(minValue, maxValue);
 
-                var updateMaterialPriceResponseDto = 
+                var updateMaterialPriceResponseDto =
                     material.ToUpdateMaterialPriceResponseDto();
 
                 updateMaterialPriceResponseDtos.Add(updateMaterialPriceResponseDto);
+
+                await _context.SaveChangesAsync(token);
 
                 if (token.IsCancellationRequested)
                 {
@@ -49,7 +51,6 @@ public class UpdateMaterialPricesCommandHandler
                 }
             }
         }
-        await _context.SaveChangesAsync(token);
 
         return updateMaterialPriceResponseDtos;
     }

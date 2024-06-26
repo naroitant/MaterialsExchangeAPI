@@ -64,7 +64,7 @@ public class UpdateMaterialCommandHandler
 
         await _context.SaveChangesAsync(token);
 
-        var updateMaterialResponseDto = 
+        var updateMaterialResponseDto =
             updatedMaterial.ToUpdateMaterialResponseDto();
 
         return updateMaterialResponseDto;

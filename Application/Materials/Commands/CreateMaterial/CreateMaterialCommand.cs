@@ -1,5 +1,6 @@
 ﻿using MaterialsExchangeAPI.Application.Common.Interfaces;
 using MaterialsExchangeAPI.Application.Common.Mappings;
+using System.Data;
 
 namespace MaterialsExchangeAPI.Application.Materials.Commands.CreateMaterial;
 
@@ -34,17 +35,19 @@ public class CreateMaterialHandler
         _context = context;
     }
 
+    
     public async Task<CreateMaterialResponseDto> Handle(
         CreateMaterialCommand command, CancellationToken token)
     {
-        var createMaterialRequestDto = new CreateMaterialRequestDto() {
+        var createMaterialRequestDto = new CreateMaterialRequestDto()
+        {
             Name = command.Name,
             Price = command.Price,
             SellerId = command.SellerId
         };
 
         var material = createMaterialRequestDto.ToMaterial();
-        var latestMaterial = 
+        var latestMaterial =
             await _context.Materials.OrderBy(l => l.Id).LastOrDefaultAsync(token);
 
         if (latestMaterial is null)

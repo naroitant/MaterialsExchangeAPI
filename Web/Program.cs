@@ -1,4 +1,5 @@
 using Hangfire;
+using Infrastructure.Services;
 using MaterialsExchangeAPI.Infrastructure.Hangfire;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,6 +24,8 @@ app.UseHangfireDashboard();
 app.StartRecurringJobs();
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<DbTransactionMiddleware>();
 
 app.UseAuthorization();
 

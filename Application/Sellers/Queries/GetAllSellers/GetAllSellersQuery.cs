@@ -21,7 +21,7 @@ public class GetAllSellersQueryHandler
     public async Task<List<GetSellerResponseDto>> Handle(
         GetAllSellersQuery request, CancellationToken token)
     {
-        var sellers = 
+        var sellers =
             await _context.Sellers.ToListAsync(cancellationToken: token);
         var getSellerResponseDtos =
             sellers.Select(s => s.ToGetSellerResponseDto()).ToList();
