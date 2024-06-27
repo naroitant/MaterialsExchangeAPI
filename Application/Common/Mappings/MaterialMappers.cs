@@ -9,26 +9,6 @@ namespace MaterialsExchangeAPI.Application.Common.Mappings;
 
 public static class MaterialMappers
 {
-    public static Material ToMaterial(this CreateMaterialRequestDto createMaterialRequestDto)
-    {
-        return new Material
-        {
-            Name = createMaterialRequestDto.Name,
-            Price = createMaterialRequestDto.Price,
-            SellerId = createMaterialRequestDto.SellerId,
-        };
-    }
-
-    public static Material ToMaterial(this UpdateMaterialRequestDto updateMaterialRequestDto)
-    {
-        return new Material
-        {
-            Name = updateMaterialRequestDto.Name,
-            Price = updateMaterialRequestDto.Price,
-            SellerId = updateMaterialRequestDto.SellerId,
-        };
-    }
-
     public static CreateMaterialResponseDto ToCreateMaterialResponseDto(this Material material)
     {
         return new CreateMaterialResponseDto

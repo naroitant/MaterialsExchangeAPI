@@ -2,8 +2,8 @@
 
 public record UpdateMaterialResponseDto
 {
-    public required int Id { get; set; }
-    public required string Name { get; set; }
-    public required decimal Price { get; set; }
-    public required int SellerId { get; set; }
+    public int Id;
+    public string Name = string.Empty;
+    public decimal Price;
+    public int SellerId;
 }

@@ -6,12 +6,12 @@ namespace MaterialsExchangeAPI.Application.Sellers.Queries.GetSellerById;
 /// <summary>
 /// Запрос на получение продавца по id
 /// </summary>
-public class GetSellerByIdQuery : IRequest<GetSellerResponseDto?>
+public record GetSellerByIdQuery : IRequest<GetSellerResponseDto?>
 {
     /// <summary>
     /// Уникальный идентификатор продавца
     /// </summary>
-    public int Id { get; set; }
+    public int Id;
 }
 
 public class GetSellerByIdQueryHandler

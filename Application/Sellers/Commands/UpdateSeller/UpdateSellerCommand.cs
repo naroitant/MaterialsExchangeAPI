@@ -6,17 +6,17 @@ namespace MaterialsExchangeAPI.Application.Sellers.Commands.UpdateSeller;
 /// <summary>
 /// Команда обновления продавца
 /// </summary>
-public class UpdateSellerCommand : IRequest<UpdateSellerResponseDto?>
+public record UpdateSellerCommand : IRequest<UpdateSellerResponseDto?>
 {
     /// <summary>
     /// Уникальный идентификатор продавца
     /// </summary>
-    public required int Id { get; set; }
+    public int Id;
 
     /// <summary>
     /// Имя продавца
     /// </summary>
-    public required string Name { get; set; }
+    public string Name = string.Empty;
 }
 
 public class UpdateSellerCommandHandler 
@@ -46,8 +46,7 @@ public class UpdateSellerCommandHandler
             return null;
         }
 
-        seller.Name = updateSellerRequestDto.Name;
-
+        seller.Update(updateSellerRequestDto.Name);
         await _context.SaveChangesAsync(token);
 
         var updateSellerResponseDto = seller.ToUpdateSellerResponseDto();

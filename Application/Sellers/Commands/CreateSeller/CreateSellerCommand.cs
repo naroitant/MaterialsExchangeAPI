@@ -1,5 +1,6 @@
 ﻿using MaterialsExchangeAPI.Application.Common.Interfaces;
 using MaterialsExchangeAPI.Application.Common.Mappings;
+using MaterialsExchangeAPI.Domain.Entities;
 using System.Data;
 
 namespace MaterialsExchangeAPI.Application.Sellers.Commands.CreateSeller;
@@ -7,19 +8,18 @@ namespace MaterialsExchangeAPI.Application.Sellers.Commands.CreateSeller;
 /// <summary>
 /// Команда создания продавца
 /// </summary>
-public class CreateSellerCommand : IRequest<CreateSellerResponseDto>
+public record CreateSellerCommand : IRequest<CreateSellerResponseDto>
 {
     /// <summary>
     /// Имя продавца
     /// </summary>
-    public required string Name { get; set; }
+    public string Name = string.Empty;
 }
 
 public class CreateSellerCommandHandler
     : IRequestHandler<CreateSellerCommand, CreateSellerResponseDto>
 {
     private readonly IAppDbContext _context;
-    private readonly IDbConnection _connection;
 
     public CreateSellerCommandHandler(IAppDbContext context)
     {
@@ -34,17 +34,17 @@ public class CreateSellerCommandHandler
             Name = command.Name,
         };
 
-        var seller = createSellerRequestDto.ToSeller();
+        var seller = Seller.Create(createSellerRequestDto.Name);
         var latestSeller =
             await _context.Sellers.OrderBy(l => l.Id).LastOrDefaultAsync(token);
 
         if (latestSeller is null)
         {
-            seller.Id = 1;
+            seller.SetId(1);
         }
         else
         {
-            seller.Id = latestSeller.Id + 1;
+            seller.SetId(latestSeller.Id + 1);
         }
 
         _context.Sellers.Add(seller);

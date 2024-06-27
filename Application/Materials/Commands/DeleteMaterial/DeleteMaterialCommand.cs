@@ -6,12 +6,12 @@ namespace MaterialsExchangeAPI.Application.Materials.Commands.DeleteMaterial;
 /// <summary>
 /// Команда удаления материала
 /// </summary>
-public class DeleteMaterialCommand : IRequest<DeleteMaterialResponseDto?>
+public record DeleteMaterialCommand : IRequest<DeleteMaterialResponseDto?>
 {
     /// <summary>
     /// Уникальный идентификатор материала
     /// </summary>
-    public required int Id { get; set; }
+    public int Id;
 }
 
 public class DeleteMaterialCommandHandler 
@@ -28,7 +28,7 @@ public class DeleteMaterialCommandHandler
         DeleteMaterialCommand command, CancellationToken token)
     {
         var material = await _context.Materials.FindAsync(
-                new object?[] { command.Id }, cancellationToken: token);
+            new object?[] { command.Id }, cancellationToken: token);
 
         if (material is null)
         {

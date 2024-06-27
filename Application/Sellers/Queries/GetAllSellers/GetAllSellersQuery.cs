@@ -6,7 +6,7 @@ namespace MaterialsExchangeAPI.Application.Sellers.Queries.GetAllSellers;
 /// <summary>
 /// Запрос на получение всех продавцов
 /// </summary>
-public class GetAllSellersQuery : IRequest<List<GetSellerResponseDto>> { }
+public record GetAllSellersQuery : IRequest<List<GetSellerResponseDto>> { }
 
 public class GetAllSellersQueryHandler
     : IRequestHandler<GetAllSellersQuery, List<GetSellerResponseDto>>

@@ -6,7 +6,7 @@ namespace MaterialsExchangeAPI.Application.Materials.Commands.UpdateMaterialPric
 /// <summary>
 /// Команда обновления цен материалов
 /// </summary>
-public class UpdateMaterialPricesCommand
+public record UpdateMaterialPricesCommand
     : IRequest <List<UpdateMaterialPriceResponseDto>> { }
 
 public class UpdateMaterialPricesCommandHandler 
@@ -29,27 +29,25 @@ public class UpdateMaterialPricesCommandHandler
 
         if (materials.Any())
         {
-            Random rnd = new();
             int minValue = 1;
             int maxValue = 100;
 
             // Обходим материалы в БД.
             foreach (var material in materials)
             {
-                material.Price = rnd.Next(minValue, maxValue);
+                material.UpdatePriceRandomly(minValue, maxValue);
 
                 var updateMaterialPriceResponseDto =
                     material.ToUpdateMaterialPriceResponseDto();
-
                 updateMaterialPriceResponseDtos.Add(updateMaterialPriceResponseDto);
-
-                await _context.SaveChangesAsync(token);
 
                 if (token.IsCancellationRequested)
                 {
                     break;
                 }
             }
+
+            await _context.SaveChangesAsync(token);
         }
 
         return updateMaterialPriceResponseDtos;

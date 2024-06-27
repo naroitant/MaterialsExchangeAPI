@@ -6,27 +6,27 @@ namespace MaterialsExchangeAPI.Application.Materials.Commands.UpdateMaterial;
 /// <summary>
 /// Команда обновления информации о материале
 /// </summary>
-public class UpdateMaterialCommand : IRequest<UpdateMaterialResponseDto?>
+public record UpdateMaterialCommand : IRequest<UpdateMaterialResponseDto?>
 {
     /// <summary>
     /// Уникальный идентификатор материала
     /// </summary>
-    public required int Id { get; set; }
+    public int Id;
 
     /// <summary>
     /// Название материала
     /// </summary>
-    public required string Name { get; set; }
+    public string Name = string.Empty;
 
     /// <summary>
     /// Стоимость материала
     /// </summary>
-    public required decimal Price { get; set; }
+    public decimal Price;
 
     /// <summary>
     /// Уникальный идентификатор продавца
     /// </summary>
-    public required int SellerId { get; set; }
+    public int SellerId;
 }
 
 public class UpdateMaterialCommandHandler
@@ -58,10 +58,11 @@ public class UpdateMaterialCommandHandler
             return null;
         }
 
-        updatedMaterial.Name = updateMaterialRequestDto.Name;
-        updatedMaterial.Price = updateMaterialRequestDto.Price;
-        updatedMaterial.SellerId = updateMaterialRequestDto.SellerId;
-
+        updatedMaterial.Update(
+            updateMaterialRequestDto.Name, 
+            updateMaterialRequestDto.Price, 
+            updateMaterialRequestDto.SellerId
+        );
         await _context.SaveChangesAsync(token);
 
         var updateMaterialResponseDto =

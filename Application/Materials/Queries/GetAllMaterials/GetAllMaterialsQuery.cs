@@ -6,7 +6,7 @@ namespace MaterialsExchangeAPI.Application.Materials.Queries.GetAllMaterials;
 /// <summary>
 /// Запрос на получение всех материалов
 /// </summary>
-public class GetAllMaterialsQuery : IRequest<List<GetMaterialResponseDto>> { }
+public record GetAllMaterialsQuery : IRequest<List<GetMaterialResponseDto>> { }
 
 public class GetAllMaterialsQueryHandler
     : IRequestHandler<GetAllMaterialsQuery, List<GetMaterialResponseDto>>

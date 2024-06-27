@@ -6,12 +6,12 @@ namespace MaterialsExchangeAPI.Application.Materials.Queries.GetMaterialById;
 /// <summary>
 /// Запрос на получение материала по id
 /// </summary>
-public class GetMaterialByIdQuery : IRequest<GetMaterialResponseDto?>
+public record GetMaterialByIdQuery : IRequest<GetMaterialResponseDto?>
 {
     /// <summary>
     /// Уникальный идентификатор материала
     /// </summary>
-    public int Id { get; set; }
+    public int Id;
 }
 
 public class GetMaterialByIdQueryHandler

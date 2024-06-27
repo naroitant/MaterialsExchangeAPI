@@ -1,5 +1,6 @@
 ﻿using MaterialsExchangeAPI.Application.Common.Interfaces;
 using MaterialsExchangeAPI.Application.Common.Mappings;
+using MaterialsExchangeAPI.Domain.Entities;
 using System.Data;
 
 namespace MaterialsExchangeAPI.Application.Materials.Commands.CreateMaterial;
@@ -12,17 +13,17 @@ public record CreateMaterialCommand : IRequest<CreateMaterialResponseDto>
     /// <summary>
     /// Название материала
     /// </summary>
-    public required string Name { get; set; }
+    public string Name = string.Empty;
 
     /// <summary>
     /// Стоимость материала
     /// </summary>
-    public required decimal Price { get; set; }
+    public decimal Price;
 
     /// <summary>
     /// Уникальный идентификатор продавца
     /// </summary>
-    public required int SellerId { get; set; }
+    public int SellerId;
 }
 
 public class CreateMaterialHandler
@@ -34,8 +35,7 @@ public class CreateMaterialHandler
     {
         _context = context;
     }
-
-    
+        
     public async Task<CreateMaterialResponseDto> Handle(
         CreateMaterialCommand command, CancellationToken token)
     {
@@ -46,17 +46,21 @@ public class CreateMaterialHandler
             SellerId = command.SellerId
         };
 
-        var material = createMaterialRequestDto.ToMaterial();
+        var material = Material.Create(
+            createMaterialRequestDto.Name,
+            createMaterialRequestDto.Price,
+            createMaterialRequestDto.SellerId
+        );
         var latestMaterial =
             await _context.Materials.OrderBy(l => l.Id).LastOrDefaultAsync(token);
 
         if (latestMaterial is null)
         {
-            material.Id = 1;
+            material.SetId(1);
         }
         else
         {
-            material.Id = latestMaterial.Id + 1;
+            material.SetId(latestMaterial.Id + 1);
         }
 
         _context.Materials.Add(material);

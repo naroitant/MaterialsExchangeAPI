@@ -8,22 +8,6 @@ namespace MaterialsExchangeAPI.Application.Common.Mappings;
 
 public static class SellerMappers
 {
-    public static Seller ToSeller(this CreateSellerRequestDto createSellerRequestDto)
-    {
-        return new Seller
-        {
-            Name = createSellerRequestDto.Name,
-        };
-    }
-
-    public static Seller ToSeller(this UpdateSellerRequestDto updateSellerRequestDto)
-    {
-        return new Seller
-        {
-            Name = updateSellerRequestDto.Name,
-        };
-    }
-
     public static CreateSellerResponseDto ToCreateSellerResponseDto(this Seller seller)
     {
         return new CreateSellerResponseDto

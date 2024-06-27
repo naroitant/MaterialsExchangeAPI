@@ -6,12 +6,12 @@ namespace MaterialsExchangeAPI.Application.Sellers.Commands.DeleteSeller;
 /// <summary>
 /// Команда удаления продавца
 /// </summary>
-public class DeleteSellerCommand : IRequest<DeleteSellerResponseDto?>
+public record DeleteSellerCommand : IRequest<DeleteSellerResponseDto?>
 {
     /// <summary>
     /// Уникальный идентификатор продавца
     /// </summary>
-    public required int Id { get; set; }
+    public int Id;
 }
 
 public class DeleteSellerCommandHandler

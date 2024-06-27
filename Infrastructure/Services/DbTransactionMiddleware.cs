@@ -29,7 +29,7 @@ public class DbTransactionMiddleware : IDbTransactionMiddleware
             await _next(httpContext);
             await transaction.CommitAsync();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             await transaction.RollbackAsync();
             throw;

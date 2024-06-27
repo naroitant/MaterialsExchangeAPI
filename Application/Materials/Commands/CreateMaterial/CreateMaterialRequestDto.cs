@@ -2,7 +2,7 @@
 
 public record CreateMaterialRequestDto
 {
-    public required string Name { get; set; }
-    public required decimal Price { get; set; }
-    public required int SellerId { get; set; }
+    public string Name = string.Empty;
+    public decimal Price;
+    public int SellerId;
 }
