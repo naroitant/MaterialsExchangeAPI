@@ -42,9 +42,8 @@ public class Sellers : BaseController
     [HttpGet("id")]
     public async Task<IActionResult> GetById(int id)
     {
-        var seller = await _mediator.Send(new GetSellerByIdQuery() { 
-            Id = id,
-        });
+        var seller = await _mediator.Send(
+            new GetSellerByIdQuery() { Id = id });
 
         if (seller is null)
         {
@@ -73,9 +72,8 @@ public class Sellers : BaseController
     [HttpPost]
     public async Task<IActionResult> Create(string name)
     {
-        var seller = await _mediator.Send(new CreateSellerCommand() { 
-            Name = name,
-        });
+        var seller = await _mediator.Send(
+            new CreateSellerCommand() { Name = name });
 
         if (seller is null)
         {
@@ -119,11 +117,10 @@ public class Sellers : BaseController
     [HttpDelete("id")]
     public async Task<IActionResult> Delete(int id)
     {
-        var deletedSeller = await _mediator.Send(new DeleteSellerCommand() { 
-            Id = id,
-        });
+        var deletedSellerIsFound = await _mediator.Send(
+            new DeleteSellerCommand() { Id = id });
 
-        if (deletedSeller is null)
+        if (deletedSellerIsFound is false)
         {
             return NotFound($"No seller found.");
         }

@@ -50,15 +50,15 @@ public class UpdateMaterialCommandHandler
             SellerId = command.SellerId
         };
 
-        var updatedMaterial = await _context.Materials.FindAsync(
+        var material = await _context.Materials.FindAsync(
             new object?[] { updateMaterialRequestDto.Id }, cancellationToken: token);
 
-        if (updatedMaterial is null)
+        if (material is null)
         {
             return null;
         }
 
-        updatedMaterial.Update(
+        material.Update(
             updateMaterialRequestDto.Name, 
             updateMaterialRequestDto.Price, 
             updateMaterialRequestDto.SellerId
@@ -66,7 +66,7 @@ public class UpdateMaterialCommandHandler
         await _context.SaveChangesAsync(token);
 
         var updateMaterialResponseDto =
-            updatedMaterial.ToUpdateMaterialResponseDto();
+            material.ToUpdateMaterialResponseDto();
 
         return updateMaterialResponseDto;
     }

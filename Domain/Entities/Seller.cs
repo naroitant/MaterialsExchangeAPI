@@ -6,8 +6,9 @@ namespace MaterialsExchangeAPI.Domain.Entities;
 [Table("sellers")]
 public class Seller : BaseEntity
 {
-    public string Name { get; private set; } = string.Empty;
-    private readonly List<Material> _materials = new();
+    public string Name { get; private set; }
+
+    public List<Material> Materials { get; private set; } = new();
 
     public Seller(string name)
     {

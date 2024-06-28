@@ -2,8 +2,11 @@
 
 public record UpdateMaterialRequestDto
 {
-    public int Id;
-    public string Name = string.Empty;
-    public decimal Price;
-    public int SellerId;
+    public int Id { get; set; }
+
+    public string Name { get; init; } = string.Empty;
+
+    public decimal Price { get; set; }
+
+    public int SellerId { get; set; }
 }

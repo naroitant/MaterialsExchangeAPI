@@ -43,10 +43,8 @@ public class Materials : BaseController
     [HttpGet("id")]
     public async Task<IActionResult> GetById(int id)
     {
-        var material = await _mediator.Send(new GetMaterialByIdQuery()
-        {
-            Id = id,
-        });
+        var material = await _mediator.Send(
+            new GetMaterialByIdQuery() { Id = id });
 
         if (material is null)
         {
@@ -136,12 +134,10 @@ public class Materials : BaseController
     [HttpDelete("id")]
     public async Task<IActionResult> Delete(int id)
     {
-        var deletedMaterial = await _mediator.Send(new DeleteMaterialCommand()
-        {
-            Id = id,
-        });
+        var deletedMaterialIsFound = await _mediator.Send(
+            new DeleteMaterialCommand() { Id = id });
 
-        if (deletedMaterial is null)
+        if (deletedMaterialIsFound is false)
         {
             return NotFound($"No material found.");
         }
@@ -158,9 +154,9 @@ public class Materials : BaseController
     [Route("all-prices")]
     public async Task<IActionResult> UpdatePrices(UpdateMaterialPricesCommand command)
     {
-        var updatedMaterials = await _mediator.Send(command);
+        var updatedMaterialsAreFound = await _mediator.Send(command);
 
-        if (updatedMaterials is null)
+        if (updatedMaterialsAreFound is false)
         {
             return NotFound($"No material found.");
         }

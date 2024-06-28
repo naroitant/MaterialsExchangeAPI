@@ -2,11 +2,11 @@
 
 namespace MaterialsExchangeAPI.Web.Endpoints;
 
-public class BaseController : Controller
+public abstract class BaseController : Controller
 {
     protected readonly IMediator _mediator;
-    
-    public BaseController(IMediator mediator)
+
+    protected BaseController(IMediator mediator)
     {
         _mediator = mediator;
     }

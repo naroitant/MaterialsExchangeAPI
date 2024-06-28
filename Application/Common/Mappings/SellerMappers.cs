@@ -1,7 +1,6 @@
 ﻿using MaterialsExchangeAPI.Application.Sellers.Queries;
 using MaterialsExchangeAPI.Application.Sellers.Commands.CreateSeller;
 using MaterialsExchangeAPI.Application.Sellers.Commands.UpdateSeller;
-using MaterialsExchangeAPI.Application.Sellers.Commands.DeleteSeller;
 using MaterialsExchangeAPI.Domain.Entities;
 
 namespace MaterialsExchangeAPI.Application.Common.Mappings;
@@ -20,15 +19,6 @@ public static class SellerMappers
     public static UpdateSellerResponseDto ToUpdateSellerResponseDto(this Seller seller)
     {
         return new UpdateSellerResponseDto
-        {
-            Id = seller.Id,
-            Name = seller.Name,
-        };
-    }
-
-    public static DeleteSellerResponseDto ToDeleteSellerResponseDto(this Seller seller)
-    {
-        return new DeleteSellerResponseDto
         {
             Id = seller.Id,
             Name = seller.Name,

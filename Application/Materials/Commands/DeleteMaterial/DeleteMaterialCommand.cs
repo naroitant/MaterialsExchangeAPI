@@ -1,12 +1,11 @@
 ﻿using MaterialsExchangeAPI.Application.Common.Interfaces;
-using MaterialsExchangeAPI.Application.Common.Mappings;
 
 namespace MaterialsExchangeAPI.Application.Materials.Commands.DeleteMaterial;
 
 /// <summary>
 /// Команда удаления материала
 /// </summary>
-public record DeleteMaterialCommand : IRequest<DeleteMaterialResponseDto?>
+public record DeleteMaterialCommand : IRequest<Boolean>
 {
     /// <summary>
     /// Уникальный идентификатор материала
@@ -15,7 +14,7 @@ public record DeleteMaterialCommand : IRequest<DeleteMaterialResponseDto?>
 }
 
 public class DeleteMaterialCommandHandler 
-    : IRequestHandler<DeleteMaterialCommand, DeleteMaterialResponseDto?>
+    : IRequestHandler<DeleteMaterialCommand, Boolean>
 {
     private readonly IAppDbContext _context;
 
@@ -24,7 +23,7 @@ public class DeleteMaterialCommandHandler
         _context = context;
     }
 
-    public async Task<DeleteMaterialResponseDto?> Handle(
+    public async Task<Boolean> Handle(
         DeleteMaterialCommand command, CancellationToken token)
     {
         var material = await _context.Materials.FindAsync(
@@ -32,14 +31,12 @@ public class DeleteMaterialCommandHandler
 
         if (material is null)
         {
-            return null;
+            return false;
         }
-
-        var deleteMaterialResponseDto = material.ToDeleteMaterialResponseDto();
 
         _context.Materials.Remove(material);
         await _context.SaveChangesAsync(token);
 
-        return deleteMaterialResponseDto;
+        return true;
     }
 }

@@ -2,7 +2,6 @@
 using MaterialsExchangeAPI.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using MaterialsExchangeAPI.Application.Common.Interfaces;
-using Infrastructure.Services;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -17,9 +16,6 @@ public static class DependencyInjection
 
         services.AddScoped<IAppDbContext>(
             provider => provider.GetRequiredService<AppDbContext>());
-
-        services.AddScoped<IDbTransactionMiddleware>(
-            provider => provider.GetRequiredService<DbTransactionMiddleware>());
 
         return services;    
     }

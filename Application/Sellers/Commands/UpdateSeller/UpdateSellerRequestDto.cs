@@ -2,6 +2,7 @@
 
 public record UpdateSellerRequestDto
 {
-    public int Id;
-    public string Name = string.Empty;
+    public int Id { get; init; }
+
+    public string Name { get; init; } = string.Empty;
 }

@@ -6,9 +6,12 @@ namespace MaterialsExchangeAPI.Domain.Entities;
 [Table("materials")]
 public class Material : BaseEntity
 {
-    public string Name { get; private set; } = string.Empty;
+    public string Name { get; private set; }
+
     public decimal Price { get; private set; }
+
     public Seller? Seller { get; private set; }
+
     public int SellerId { get; private set; }
 
     public Material(string name, decimal price, int sellerId)
@@ -31,9 +34,12 @@ public class Material : BaseEntity
         SellerId = sellerId;
     }
 
-    public void UpdatePriceRandomly(int minRange, int maxRange)
+    public void UpdatePriceRandomly()
     {
+        int minValue = 1;
+        int maxValue = 100;
         Random rand = new();
-        Price = rand.Next(minRange, maxRange);
+
+        Price = rand.Next(minValue, maxValue);
     }
 }

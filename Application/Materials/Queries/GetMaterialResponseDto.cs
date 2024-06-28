@@ -2,8 +2,11 @@
 
 public record GetMaterialResponseDto
 {
-    public int Id;
-    public string Name = string.Empty;
-    public decimal Price;
-    public int SellerId;
+    public int Id { get; init; }
+
+    public string Name { get; init; } = string.Empty;
+
+    public decimal Price { get; init; }
+
+    public int SellerId { get; init; }
 }

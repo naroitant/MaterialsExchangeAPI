@@ -1,12 +1,16 @@
 using Hangfire;
-using Infrastructure.Services;
+using MaterialsExchangeAPI.Infrastructure.Services;
 using MaterialsExchangeAPI.Infrastructure.Hangfire;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddInfrastructureServices(builder.Configuration);
-builder.Services.AddWebServices(builder.Configuration);
+builder.Services.AddWebServices();
+
+builder.Host.UseSerilog((context, configuration) =>
+    configuration.ReadFrom.Configuration(context.Configuration));
 
 var app = builder.Build();
 
@@ -26,6 +30,7 @@ app.StartRecurringJobs();
 app.UseHttpsRedirection();
 
 app.UseMiddleware<DbTransactionMiddleware>();
+app.UseMiddleware<LoggingMiddleware>();
 
 app.UseAuthorization();
 

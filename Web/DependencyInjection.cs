@@ -3,7 +3,7 @@
 public static class DependencyInjection
 {
     public static IServiceCollection AddWebServices(
-        this IServiceCollection services, IConfiguration configuration)
+        this IServiceCollection services)
     {
         services.AddControllers();
         services.AddEndpointsApiExplorer();

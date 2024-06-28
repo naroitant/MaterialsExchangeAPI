@@ -1,10 +1,9 @@
 ﻿using MaterialsExchangeAPI.Infrastructure.Data;
-using MaterialsExchangeAPI.Application.Common.Interfaces;
 using Microsoft.AspNetCore.Http;
 
-namespace Infrastructure.Services;
+namespace MaterialsExchangeAPI.Infrastructure.Services;
 
-public class DbTransactionMiddleware : IDbTransactionMiddleware
+public class DbTransactionMiddleware
 {
     private readonly RequestDelegate _next;
 

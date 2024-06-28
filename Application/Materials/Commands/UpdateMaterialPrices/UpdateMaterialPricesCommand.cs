@@ -1,16 +1,14 @@
 ﻿using MaterialsExchangeAPI.Application.Common.Interfaces;
-using MaterialsExchangeAPI.Application.Common.Mappings;
 
 namespace MaterialsExchangeAPI.Application.Materials.Commands.UpdateMaterialPrices;
 
 /// <summary>
 /// Команда обновления цен материалов
 /// </summary>
-public record UpdateMaterialPricesCommand
-    : IRequest <List<UpdateMaterialPriceResponseDto>> { }
+public record UpdateMaterialPricesCommand : IRequest <Boolean> { }
 
 public class UpdateMaterialPricesCommandHandler 
-    : IRequestHandler<UpdateMaterialPricesCommand, List<UpdateMaterialPriceResponseDto>>
+    : IRequestHandler<UpdateMaterialPricesCommand, Boolean>
 {
     private readonly IAppDbContext _context;
 
@@ -19,27 +17,18 @@ public class UpdateMaterialPricesCommandHandler
         _context = context;
     }
 
-    public async Task<List<UpdateMaterialPriceResponseDto>> Handle(
+    public async Task<Boolean> Handle(
         UpdateMaterialPricesCommand command, CancellationToken token)
     {
         var materials =
             await _context.Materials.ToListAsync(cancellationToken: token);
-        var updateMaterialPriceResponseDtos =
-            new List<UpdateMaterialPriceResponseDto>();
 
         if (materials.Any())
         {
-            int minValue = 1;
-            int maxValue = 100;
-
             // Обходим материалы в БД.
             foreach (var material in materials)
             {
-                material.UpdatePriceRandomly(minValue, maxValue);
-
-                var updateMaterialPriceResponseDto =
-                    material.ToUpdateMaterialPriceResponseDto();
-                updateMaterialPriceResponseDtos.Add(updateMaterialPriceResponseDto);
+                material.UpdatePriceRandomly();
 
                 if (token.IsCancellationRequested)
                 {
@@ -48,8 +37,10 @@ public class UpdateMaterialPricesCommandHandler
             }
 
             await _context.SaveChangesAsync(token);
+
+            return true;
         }
 
-        return updateMaterialPriceResponseDtos;
+        return false;
     }
 }

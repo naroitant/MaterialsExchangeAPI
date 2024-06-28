@@ -1,6 +1,4 @@
-﻿using ValidationException = MaterialsExchangeAPI.Application.Common.Exceptions.ValidationException;
-
-namespace MaterialsExchangeAPI.Application.Common.Behaviors
+﻿namespace MaterialsExchangeAPI.Application.Common.Behaviors
 {
     public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
     {
