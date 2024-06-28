@@ -7,7 +7,8 @@ namespace MaterialsExchangeAPI.Application.Common.Mappings;
 
 public static class MaterialMappers
 {
-    public static CreateMaterialResponseDto ToCreateMaterialResponseDto(this Material material)
+    public static CreateMaterialResponseDto ToCreateMaterialResponseDto(
+        this Material material)
     {
         return new CreateMaterialResponseDto
         {
@@ -18,7 +19,8 @@ public static class MaterialMappers
         };
     }
 
-    public static UpdateMaterialResponseDto ToUpdateMaterialResponseDto(this Material material)
+    public static UpdateMaterialResponseDto ToUpdateMaterialResponseDto(
+        this Material material)
     {
         return new UpdateMaterialResponseDto
         {
@@ -29,7 +31,8 @@ public static class MaterialMappers
         };
     }
 
-    public static GetMaterialResponseDto ToGetMaterialResponseDto(this Material material)
+    public static GetMaterialResponseDto ToGetMaterialResponseDto(
+        this Material material)
     {
         return new GetMaterialResponseDto
         {

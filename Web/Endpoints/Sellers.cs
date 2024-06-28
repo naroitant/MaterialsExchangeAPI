@@ -20,6 +20,8 @@ public class Sellers : BaseController
     /// <response code="200">Возвращает всех продавцов</response>
     /// <response code="404">Продавцов не найдено</response>
     [HttpGet]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
     public async Task<IActionResult> GetAll()
     {
         var sellers = await _mediator.Send(new GetAllSellersQuery());
@@ -40,6 +42,8 @@ public class Sellers : BaseController
     /// <response code="200">Возвращает продавца</response>
     /// <response code="404">Продавец не найден</response>
     [HttpGet("id")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
     public async Task<IActionResult> GetById(int id)
     {
         var seller = await _mediator.Send(
@@ -70,6 +74,8 @@ public class Sellers : BaseController
     /// <response code="201">Возвращает нового продавца</response>
     /// <response code="400">Некорректно введены данные</response>
     [HttpPost]
+    [ProducesResponseType(201)]
+    [ProducesResponseType(400)]
     public async Task<IActionResult> Create(string name)
     {
         var seller = await _mediator.Send(
@@ -93,6 +99,9 @@ public class Sellers : BaseController
     /// <response code="400">Некорректно введены данные</response>
     /// <response code="404">Продавец не найден</response>
     [HttpPatch("id")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(404)]
     public async Task<IActionResult> Update(int id, string name)
     {
         var seller = await _mediator.Send(new UpdateSellerCommand() { 
@@ -115,6 +124,8 @@ public class Sellers : BaseController
     /// <response code="204">Продавец успешно удалён</response>
     /// <response code="404">Продавец не найден</response>
     [HttpDelete("id")]
+    [ProducesResponseType(204)]
+    [ProducesResponseType(404)]
     public async Task<IActionResult> Delete(int id)
     {
         var deletedSellerIsFound = await _mediator.Send(

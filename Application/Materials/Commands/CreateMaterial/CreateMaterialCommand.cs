@@ -8,7 +8,7 @@ namespace MaterialsExchangeAPI.Application.Materials.Commands.CreateMaterial;
 /// <summary>
 /// Команда создания материала
 /// </summary>
-public record CreateMaterialCommand : IRequest<CreateMaterialResponseDto>
+public record CreateMaterialCommand : IRequest<CreateMaterialResponseDto?>
 {
     /// <summary>
     /// Название материала
@@ -27,7 +27,7 @@ public record CreateMaterialCommand : IRequest<CreateMaterialResponseDto>
 }
 
 public class CreateMaterialHandler
-    : IRequestHandler<CreateMaterialCommand, CreateMaterialResponseDto>
+    : IRequestHandler<CreateMaterialCommand, CreateMaterialResponseDto?>
 {
     private readonly IAppDbContext _context;
 
@@ -36,23 +36,37 @@ public class CreateMaterialHandler
         _context = context;
     }
         
-    public async Task<CreateMaterialResponseDto> Handle(
+    public async Task<CreateMaterialResponseDto?> Handle(
         CreateMaterialCommand command, CancellationToken token)
     {
         var createMaterialRequestDto = new CreateMaterialRequestDto()
         {
             Name = command.Name,
             Price = command.Price,
-            SellerId = command.SellerId
+            SellerId = command.SellerId,
         };
+
+        // Проверяем валидность внешнего ключа.
+        var seller = await _context.Sellers.FindAsync(
+            new object?[] { createMaterialRequestDto.SellerId }, 
+            cancellationToken: token);
+
+        if (seller is null)
+        {
+            return null;
+        }
 
         var material = Material.Create(
             createMaterialRequestDto.Name,
             createMaterialRequestDto.Price,
             createMaterialRequestDto.SellerId
         );
-        var latestMaterial =
-            await _context.Materials.OrderBy(l => l.Id).LastOrDefaultAsync(token);
+
+        // Обращаемся к последнему материалу из БД, чтобы на основе его id
+        // установить id нового материала.
+        var latestMaterial = await _context.Materials
+            .OrderBy(l => l.Id)
+            .LastOrDefaultAsync(token);
 
         if (latestMaterial is null)
         {

@@ -21,6 +21,8 @@ public class Materials : BaseController
     /// <response code="200">Возвращает все материалы</response>
     /// <response code="404">Материалов не найдено</response>
     [HttpGet]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
     public async Task<IActionResult> GetAll()
     {
         var materials = await _mediator.Send(new GetAllMaterialsQuery());
@@ -41,6 +43,8 @@ public class Materials : BaseController
     /// <response code="200">Возвращает материал</response>
     /// <response code="404">Материал не найден</response>
     [HttpGet("id")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
     public async Task<IActionResult> GetById(int id)
     {
         var material = await _mediator.Send(
@@ -76,6 +80,9 @@ public class Materials : BaseController
     /// <response code="400">Некорректно введены данные</response>
     /// <response code="500">Некорректно введены данные</response>
     [HttpPost]
+    [ProducesResponseType(201)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(500)]
     public async Task<IActionResult> Create(string name, decimal price, 
         int sellerId)
     {
@@ -106,6 +113,9 @@ public class Materials : BaseController
     /// <response code="404">Материал не найден</response>
     /// <response code="500">Некорректно введены данные</response>
     [HttpPatch("id")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
+    [ProducesResponseType(500)]
     public async Task<IActionResult> Update(int id, string name, decimal price,
         int sellerId)
     {
@@ -132,6 +142,8 @@ public class Materials : BaseController
     /// <response code="204">Материал успешно удалён</response>
     /// <response code="404">Материал не найден</response>
     [HttpDelete("id")]
+    [ProducesResponseType(204)]
+    [ProducesResponseType(404)]
     public async Task<IActionResult> Delete(int id)
     {
         var deletedMaterialIsFound = await _mediator.Send(
@@ -150,9 +162,13 @@ public class Materials : BaseController
     /// </summary>
     /// <response code="200">Цены материалов успешно обновлены</response>
     /// <response code="404">Материалов не найдено</response>
+    /// 
     [HttpPatch]
     [Route("all-prices")]
-    public async Task<IActionResult> UpdatePrices(UpdateMaterialPricesCommand command)
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
+    public async Task<IActionResult> UpdatePrices(
+        UpdateMaterialPricesCommand command)
     {
         var updatedMaterialsAreFound = await _mediator.Send(command);
 

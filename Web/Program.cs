@@ -5,6 +5,7 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Регистрируем сервисы из разных сборок.
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddWebServices();

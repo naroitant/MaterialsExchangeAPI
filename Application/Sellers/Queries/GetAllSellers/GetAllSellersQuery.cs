@@ -21,10 +21,11 @@ public class GetAllSellersQueryHandler
     public async Task<List<GetSellerResponseDto>> Handle(
         GetAllSellersQuery request, CancellationToken token)
     {
-        var sellers =
-            await _context.Sellers.ToListAsync(cancellationToken: token);
-        var getSellerResponseDtos =
-            sellers.Select(s => s.ToGetSellerResponseDto()).ToList();
+        var sellers = await _context.Sellers.ToListAsync(
+            cancellationToken: token);
+        var getSellerResponseDtos = sellers
+            .Select(s => s.ToGetSellerResponseDto())
+            .ToList();
 
         return getSellerResponseDtos;
     }

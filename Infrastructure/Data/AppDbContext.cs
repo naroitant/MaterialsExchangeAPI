@@ -16,7 +16,8 @@ public class AppDbContext : DbContext, IAppDbContext
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-        builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        builder.ApplyConfigurationsFromAssembly(
+            Assembly.GetExecutingAssembly());
 
         builder.Entity<Material>(x => x.HasKey(m => new { m.Id }));
         builder.Entity<Material>()

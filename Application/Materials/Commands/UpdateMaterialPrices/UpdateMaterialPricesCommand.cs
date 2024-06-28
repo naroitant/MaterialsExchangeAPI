@@ -25,7 +25,6 @@ public class UpdateMaterialPricesCommandHandler
 
         if (materials.Any())
         {
-            // Обходим материалы в БД.
             foreach (var material in materials)
             {
                 material.UpdatePriceRandomly();

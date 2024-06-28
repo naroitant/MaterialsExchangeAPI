@@ -1,7 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
-using MaterialsExchangeAPI.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
+﻿using MaterialsExchangeAPI.Infrastructure.Data;
 using MaterialsExchangeAPI.Application.Common.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -11,7 +11,8 @@ public static class DependencyInjection
         this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<AppDbContext>(options => {
-            options.UseNpgsql(configuration.GetConnectionString("defaultConnection"));
+            options.UseNpgsql(configuration.
+                GetConnectionString("defaultConnection"));
         });
 
         services.AddScoped<IAppDbContext>(

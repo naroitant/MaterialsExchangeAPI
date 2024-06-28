@@ -7,7 +7,8 @@ namespace MaterialsExchangeAPI.Application.Common.Mappings;
 
 public static class SellerMappers
 {
-    public static CreateSellerResponseDto ToCreateSellerResponseDto(this Seller seller)
+    public static CreateSellerResponseDto ToCreateSellerResponseDto(
+        this Seller seller)
     {
         return new CreateSellerResponseDto
         {
@@ -16,7 +17,8 @@ public static class SellerMappers
         };
     }
 
-    public static UpdateSellerResponseDto ToUpdateSellerResponseDto(this Seller seller)
+    public static UpdateSellerResponseDto ToUpdateSellerResponseDto(
+        this Seller seller)
     {
         return new UpdateSellerResponseDto
         {
@@ -25,7 +27,8 @@ public static class SellerMappers
         };
     }
 
-    public static GetSellerResponseDto ToGetSellerResponseDto(this Seller seller)
+    public static GetSellerResponseDto ToGetSellerResponseDto(
+        this Seller seller)
     {
         return new GetSellerResponseDto
         {

@@ -35,8 +35,12 @@ public class CreateSellerCommandHandler
         };
 
         var seller = Seller.Create(createSellerRequestDto.Name);
-        var latestSeller =
-            await _context.Sellers.OrderBy(l => l.Id).LastOrDefaultAsync(token);
+
+        // Обращаемся к последнему продавцу из БД, чтобы на основе его id
+        // установить id нового продавца.
+        var latestSeller = await _context.Sellers
+            .OrderBy(l => l.Id)
+            .LastOrDefaultAsync(token);
 
         if (latestSeller is null)
         {
