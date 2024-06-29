@@ -20,32 +20,32 @@ public class LoggingMiddleware
         _next = next ?? throw new ArgumentNullException(nameof(next));
     }
 
-    public async Task Invoke(HttpContext httpContext)
+    public async Task Invoke(HttpContext context)
     {
-        var request = httpContext.Request;
+        var request = context.Request;
 
         // Фиксируем время отправки запроса.
         var start = Stopwatch.GetTimestamp();
 
-        if (httpContext is null)
+        if (context is null)
         {
-            throw new ArgumentNullException(nameof(httpContext));
+            throw new ArgumentNullException(nameof(context));
         }
 
         try
         {
-            await _next(httpContext);
+            await _next(context);
 
             // Вычисляем время на получение ответа на запрос.
             var elapsedMilliseconds =
                 GetElapsedMilliseconds(start, Stopwatch.GetTimestamp());
 
-            var statusCode = httpContext.Response.StatusCode;
+            var statusCode = context.Response.StatusCode;
             var level = (statusCode > 499)
                 ? LogEventLevel.Error
                 : LogEventLevel.Information;
             var log = (level is LogEventLevel.Error)
-                ? LogForErrorContext(httpContext)
+                ? LogForErrorContext(context)
                 : Log;
 
             log.Write(level, MessageTemplate, request.Method, request.Path,
@@ -55,10 +55,10 @@ public class LoggingMiddleware
         {
             var elapsedMilliseconds =
                 GetElapsedMilliseconds(start, Stopwatch.GetTimestamp());
-            var statusCode = httpContext.Response.StatusCode;
 
-            LogForErrorContext(httpContext).Error(ex, MessageTemplate,
-                request.Method, request.Path, statusCode, elapsedMilliseconds, ex);
+            LogForErrorContext(context).Error(ex, MessageTemplate,
+                request.Method, request.Path, context.Response.StatusCode,
+                elapsedMilliseconds, ex);
         }
     }
 

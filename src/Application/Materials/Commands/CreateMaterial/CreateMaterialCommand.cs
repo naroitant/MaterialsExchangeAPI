@@ -46,16 +46,6 @@ public class CreateMaterialHandler
             SellerId = command.SellerId,
         };
 
-        // Проверяем валидность внешнего ключа.
-        var seller = await _context.Sellers.FindAsync(
-            new object?[] { createMaterialRequestDto.SellerId }, 
-            cancellationToken: token);
-
-        if (seller is null)
-        {
-            return null;
-        }
-
         var material = Material.Create(
             createMaterialRequestDto.Name,
             createMaterialRequestDto.Price,

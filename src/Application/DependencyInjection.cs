@@ -1,8 +1,8 @@
-﻿using System.Reflection;
-using Hangfire;
+﻿using Hangfire;
 using Hangfire.PostgreSql;
 using MaterialsExchangeAPI.Application.Common.Behaviors;
 using Microsoft.Extensions.Configuration;
+using System.Reflection;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
