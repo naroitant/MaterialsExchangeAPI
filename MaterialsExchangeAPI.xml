@@ -71,7 +71,6 @@
             </summary>
             <response code="200">Цены материалов успешно обновлены</response>
             <response code="404">Материалов не найдено</response>
-            
         </member>
         <member name="M:MaterialsExchangeAPI.Web.Endpoints.Sellers.GetAll">
             <summary>

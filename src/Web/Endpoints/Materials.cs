@@ -162,7 +162,6 @@ public class Materials : BaseController
     /// </summary>
     /// <response code="200">Цены материалов успешно обновлены</response>
     /// <response code="404">Материалов не найдено</response>
-    /// 
     [HttpPatch]
     [Route("all-prices")]
     [ProducesResponseType(200)]

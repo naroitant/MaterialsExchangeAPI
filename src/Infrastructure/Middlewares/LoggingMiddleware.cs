@@ -12,7 +12,7 @@ public class LoggingMiddleware
 
     private readonly RequestDelegate _next;
 
-    const string MessageTemplate =
+    const string MessageTemplate = 
         "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms";
 
     public LoggingMiddleware(RequestDelegate next)
@@ -32,22 +32,34 @@ public class LoggingMiddleware
             throw new ArgumentNullException(nameof(httpContext));
         }
 
-        await _next(httpContext);
+        try
+        {
+            await _next(httpContext);
 
-        // Вычисляем время на получение ответа на запрос.
-        var elapsedMilliseconds =
-            GetElapsedMilliseconds(start, Stopwatch.GetTimestamp());
+            // Вычисляем время на получение ответа на запрос.
+            var elapsedMilliseconds =
+                GetElapsedMilliseconds(start, Stopwatch.GetTimestamp());
 
-        var statusCode = httpContext.Response.StatusCode;
-        var level = (statusCode > 499)
-            ? LogEventLevel.Error
-            : LogEventLevel.Information;
-        var log = (level is LogEventLevel.Error)
-            ? LogForErrorContext(httpContext)
-            : Log;
+            var statusCode = httpContext.Response.StatusCode;
+            var level = (statusCode > 499)
+                ? LogEventLevel.Error
+                : LogEventLevel.Information;
+            var log = (level is LogEventLevel.Error)
+                ? LogForErrorContext(httpContext)
+                : Log;
 
-        log.Write(level, MessageTemplate, request.Method, request.Path,
-            statusCode, elapsedMilliseconds);
+            log.Write(level, MessageTemplate, request.Method, request.Path,
+                statusCode, elapsedMilliseconds);
+        }
+        catch (Exception ex)
+        {
+            var elapsedMilliseconds =
+                GetElapsedMilliseconds(start, Stopwatch.GetTimestamp());
+            var statusCode = httpContext.Response.StatusCode;
+
+            LogForErrorContext(httpContext).Error(ex, MessageTemplate,
+                request.Method, request.Path, statusCode, elapsedMilliseconds, ex);
+        }
     }
 
     private static double GetElapsedMilliseconds(long start, long stop)
