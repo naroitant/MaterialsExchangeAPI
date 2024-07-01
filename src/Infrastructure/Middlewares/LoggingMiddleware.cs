@@ -5,22 +5,15 @@ using System.Diagnostics;
 
 namespace MaterialsExchangeAPI.Infrastructure.Services;
 
-public class LoggingMiddleware
+public class LoggingMiddleware : IMiddleware
 {
     private static readonly ILogger Log = 
         Serilog.Log.ForContext<LoggingMiddleware>();
 
-    private readonly RequestDelegate _next;
-
     const string MessageTemplate = 
         "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms";
 
-    public LoggingMiddleware(RequestDelegate next)
-    {
-        _next = next ?? throw new ArgumentNullException(nameof(next));
-    }
-
-    public async Task Invoke(HttpContext context)
+    public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
         var request = context.Request;
 
@@ -34,7 +27,7 @@ public class LoggingMiddleware
 
         try
         {
-            await _next(context);
+            await next(context);
 
             // Вычисляем время на получение ответа на запрос.
             var elapsedMilliseconds =

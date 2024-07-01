@@ -3,29 +3,29 @@ using Microsoft.AspNetCore.Http;
 
 namespace MaterialsExchangeAPI.Infrastructure.Services;
 
-public class DbTransactionMiddleware
+public class DbTransactionMiddleware : IMiddleware
 {
-    private readonly RequestDelegate _next;
+    private readonly AppDbContext _context;
 
-    public DbTransactionMiddleware(RequestDelegate next)
+    public DbTransactionMiddleware(AppDbContext context)
     {
-        _next = next;
+        _context = context;
     }
 
-    public async Task Invoke(HttpContext httpContext, AppDbContext context)
+    public async Task InvokeAsync(HttpContext httpContext, RequestDelegate next)
     {
-        using var transaction = await context.Database.BeginTransactionAsync();
+        using var transaction = await _context.Database.BeginTransactionAsync();
 
         if (httpContext.Request.Method.Equals("GET",
             StringComparison.CurrentCultureIgnoreCase))
         {
-            await _next(httpContext);
+            await next(httpContext);
             return;
         }
 
         try
         {
-            await _next(httpContext);
+            await next(httpContext);
             await transaction.CommitAsync();
         }
         catch (Exception)
