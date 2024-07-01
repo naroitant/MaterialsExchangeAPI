@@ -18,8 +18,8 @@ public static class DependencyInjection
 
         services.AddScoped<IAppDbContext>(
             provider => provider.GetRequiredService<AppDbContext>());
-        services.AddTransient<DbTransactionMiddleware>();
-        services.AddTransient<LoggingMiddleware>();
+        services.AddScoped<DbTransactionMiddleware>();
+        services.AddSingleton<LoggingMiddleware>();
 
         return services;    
     }
