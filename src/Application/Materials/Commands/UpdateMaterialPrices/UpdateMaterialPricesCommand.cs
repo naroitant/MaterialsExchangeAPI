@@ -28,11 +28,7 @@ public class UpdateMaterialPricesCommandHandler
             foreach (var material in materials)
             {
                 material.UpdatePriceRandomly();
-
-                if (token.IsCancellationRequested)
-                {
-                    break;
-                }
+                token.ThrowIfCancellationRequested();
             }
 
             await _context.SaveChangesAsync(token);

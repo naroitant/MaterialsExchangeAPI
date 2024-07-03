@@ -1,6 +1,6 @@
-﻿using MaterialsExchangeAPI.Application.Sellers.Queries;
-using MaterialsExchangeAPI.Application.Sellers.Commands.CreateSeller;
+﻿using MaterialsExchangeAPI.Application.Sellers.Commands.CreateSeller;
 using MaterialsExchangeAPI.Application.Sellers.Commands.UpdateSeller;
+using MaterialsExchangeAPI.Application.Sellers.Queries;
 using MaterialsExchangeAPI.Domain.Entities;
 
 namespace MaterialsExchangeAPI.Application.Common.Mappings;

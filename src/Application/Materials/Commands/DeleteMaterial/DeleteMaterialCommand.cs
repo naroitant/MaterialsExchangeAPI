@@ -26,8 +26,8 @@ public class DeleteMaterialCommandHandler
     public async Task<Boolean> Handle(
         DeleteMaterialCommand command, CancellationToken token)
     {
-        var material = await _context.Materials.FindAsync(
-            new object?[] { command.Id }, cancellationToken: token);
+        var material = await _context.Materials.FirstOrDefaultAsync(
+            u => u.Id == command.Id, token);
 
         if (material is null)
         {

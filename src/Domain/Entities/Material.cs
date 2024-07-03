@@ -21,12 +21,6 @@ public class Material : BaseEntity
         SellerId = sellerId;
     }
 
-    public static Material Create(string name, decimal price, int sellerId)
-    {
-        var material = new Material(name, price, sellerId);
-        return material;
-    }
-
     public void Update(string name, decimal price, int sellerId)
     {
         Name = name;

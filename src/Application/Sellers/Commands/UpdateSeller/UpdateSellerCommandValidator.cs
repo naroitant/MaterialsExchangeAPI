@@ -4,7 +4,9 @@ public class DeleteSellerCommandValidator : AbstractValidator<UpdateSellerComman
 {
     public DeleteSellerCommandValidator()
     {
-        RuleFor(m => m.Id).NotNull();
-        RuleFor(m => m.Name).NotEmpty();
+        RuleFor(m => m.Id)
+            .NotNull();
+        RuleFor(m => m.Name)
+            .NotEmpty();
     }
 }

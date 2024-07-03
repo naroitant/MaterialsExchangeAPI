@@ -1,7 +1,6 @@
 ﻿using MaterialsExchangeAPI.Application.Common.Interfaces;
 using MaterialsExchangeAPI.Application.Common.Mappings;
 using MaterialsExchangeAPI.Domain.Entities;
-using System.Data;
 
 namespace MaterialsExchangeAPI.Application.Sellers.Commands.CreateSeller;
 
@@ -34,28 +33,12 @@ public class CreateSellerCommandHandler
             Name = command.Name,
         };
 
-        var seller = Seller.Create(createSellerRequestDto.Name);
-
-        // Обращаемся к последнему продавцу из БД, чтобы на основе его id
-        // установить id нового продавца.
-        var latestSeller = await _context.Sellers
-            .OrderBy(l => l.Id)
-            .LastOrDefaultAsync(token);
-
-        if (latestSeller is null)
-        {
-            seller.SetId(1);
-        }
-        else
-        {
-            seller.SetId(latestSeller.Id + 1);
-        }
+        var seller = new Seller(createSellerRequestDto.Name);
 
         _context.Sellers.Add(seller);
         await _context.SaveChangesAsync(token);
 
         var createSellerResponseDto = seller.ToCreateSellerResponseDto();
-
         return createSellerResponseDto;
     }
 }

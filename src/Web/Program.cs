@@ -1,6 +1,6 @@
 using Hangfire;
-using MaterialsExchangeAPI.Infrastructure.Services;
 using MaterialsExchangeAPI.Infrastructure.Hangfire;
+using MaterialsExchangeAPI.Infrastructure.Services;
 using Microsoft.AspNetCore.Diagnostics;
 using Serilog;
 
