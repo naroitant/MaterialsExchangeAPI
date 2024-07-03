@@ -21,11 +21,9 @@ public class GetAllMaterialsQueryHandler
     public async Task<List<GetMaterialResponseDto>> Handle(
         GetAllMaterialsQuery request, CancellationToken token)
     {
-        var materials = await _context.Materials
-            .ToListAsync(cancellationToken: token);
-        var getMaterialResponseDtos = materials
+        var getMaterialResponseDtos = await _context.Materials
             .Select(m => m.ToGetMaterialResponseDto())
-            .ToList();
+            .ToListAsync(cancellationToken: token);
 
         return getMaterialResponseDtos;
     }

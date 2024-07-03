@@ -14,7 +14,8 @@ public class DbTransactionMiddleware
 
     public async Task Invoke(HttpContext httpContext, AppDbContext context)
     {
-        using var transaction = await context.Database.BeginTransactionAsync();
+        using var transaction = 
+            await _context.Database.BeginTransactionAsync();
 
         if (httpContext.Request.Method.Equals("GET",
             StringComparison.CurrentCultureIgnoreCase))

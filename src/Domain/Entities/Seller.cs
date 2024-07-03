@@ -15,12 +15,6 @@ public class Seller : BaseEntity
         Name = name;
     }
 
-    public static Seller Create(string name)
-    {
-        var seller = new Seller(name);
-        return seller;
-    }
-
     public void Update(string name)
     {
         Name = name;

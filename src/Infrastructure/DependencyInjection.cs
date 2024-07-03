@@ -1,5 +1,6 @@
-﻿using MaterialsExchangeAPI.Infrastructure.Data;
-using MaterialsExchangeAPI.Application.Common.Interfaces;
+﻿using MaterialsExchangeAPI.Application.Common.Interfaces;
+using MaterialsExchangeAPI.Infrastructure.Data;
+using MaterialsExchangeAPI.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 

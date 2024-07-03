@@ -50,9 +50,8 @@ public class UpdateMaterialCommandHandler
             SellerId = command.SellerId
         };
 
-        var material = await _context.Materials.FindAsync(
-            new object?[] { updateMaterialRequestDto.Id },
-            cancellationToken: token);
+        var material = await _context.Materials.FirstOrDefaultAsync(
+            u => u.Id == updateMaterialRequestDto.Id, token);
 
         if (material is null)
         {

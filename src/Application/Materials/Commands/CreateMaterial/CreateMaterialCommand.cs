@@ -1,7 +1,6 @@
 ﻿using MaterialsExchangeAPI.Application.Common.Interfaces;
 using MaterialsExchangeAPI.Application.Common.Mappings;
 using MaterialsExchangeAPI.Domain.Entities;
-using System.Data;
 
 namespace MaterialsExchangeAPI.Application.Materials.Commands.CreateMaterial;
 
@@ -46,32 +45,16 @@ public class CreateMaterialHandler
             SellerId = command.SellerId,
         };
 
-        var material = Material.Create(
+        var material = new Material(
             createMaterialRequestDto.Name,
             createMaterialRequestDto.Price,
             createMaterialRequestDto.SellerId
         );
 
-        // Обращаемся к последнему материалу из БД, чтобы на основе его id
-        // установить id нового материала.
-        var latestMaterial = await _context.Materials
-            .OrderBy(l => l.Id)
-            .LastOrDefaultAsync(token);
-
-        if (latestMaterial is null)
-        {
-            material.SetId(1);
-        }
-        else
-        {
-            material.SetId(latestMaterial.Id + 1);
-        }
-
         _context.Materials.Add(material);
         await _context.SaveChangesAsync(token);
 
         var createMaterialResponseDto = material.ToCreateMaterialResponseDto();
-
         return createMaterialResponseDto;
     }
 }

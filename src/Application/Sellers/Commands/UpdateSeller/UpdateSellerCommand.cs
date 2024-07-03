@@ -38,9 +38,8 @@ public class UpdateSellerCommandHandler
             Name = command.Name,
         };
 
-        var seller = await _context.Sellers.FindAsync(
-            new object?[] { updateSellerRequestDto.Id }, 
-            cancellationToken: token);
+        var seller = await _context.Sellers.FirstOrDefaultAsync(
+            u => u.Id == updateSellerRequestDto.Id, token);
 
         if (seller is null)
         {
