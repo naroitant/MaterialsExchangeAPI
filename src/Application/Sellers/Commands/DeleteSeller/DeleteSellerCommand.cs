@@ -26,8 +26,13 @@ public class DeleteSellerCommandHandler
     public async Task<Boolean> Handle(
         DeleteSellerCommand command, CancellationToken token)
     {
+        var deleteSellerRequestDto = new DeleteSellerRequestDto()
+        {
+            Id = command.Id,
+        };
+
         var seller = await _context.Sellers.FirstOrDefaultAsync(
-            u => u.Id == command.Id, token);
+            u => u.Id == deleteSellerRequestDto.Id, token);
 
         if (seller is null)
         {
