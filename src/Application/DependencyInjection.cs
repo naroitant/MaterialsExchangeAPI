@@ -1,4 +1,5 @@
-﻿using Hangfire;
+﻿using MaterialsExchangeAPI.Application.Common.Mappings;
+using Hangfire;
 using Hangfire.PostgreSql;
 using MaterialsExchangeAPI.Application.Common.Behaviors;
 using Microsoft.Extensions.Configuration;
@@ -11,6 +12,8 @@ public static class DependencyInjection
     public static IServiceCollection AddApplicationServices(
         this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddAutoMapper(typeof(AppMappingProfile));
+
         services.AddSwaggerGen(options =>
         {
             var basePath = AppContext.BaseDirectory;

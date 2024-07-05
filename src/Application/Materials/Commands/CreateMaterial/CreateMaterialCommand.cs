@@ -1,5 +1,6 @@
-﻿using MaterialsExchangeAPI.Application.Common.Interfaces;
-using MaterialsExchangeAPI.Application.Common.Mappings;
+﻿using AutoMapper;
+using MaterialsExchangeAPI.Application.Common;
+using MaterialsExchangeAPI.Application.Common.Interfaces;
 using MaterialsExchangeAPI.Domain.Entities;
 
 namespace MaterialsExchangeAPI.Application.Materials.Commands.CreateMaterial;
@@ -25,36 +26,24 @@ public record CreateMaterialCommand : IRequest<CreateMaterialResponseDto?>
     public int SellerId;
 }
 
-public class CreateMaterialHandler
-    : IRequestHandler<CreateMaterialCommand, CreateMaterialResponseDto?>
+public class CreateMaterialCommandHandler : BaseHandler,
+    IRequestHandler<CreateMaterialCommand, CreateMaterialResponseDto?>
 {
-    private readonly IAppDbContext _context;
-
-    public CreateMaterialHandler(IAppDbContext context)
-    {
-        _context = context;
-    }
+    public CreateMaterialCommandHandler(IAppDbContext context, IMapper mapper)
+        : base(context, mapper) { }
         
     public async Task<CreateMaterialResponseDto?> Handle(
         CreateMaterialCommand command, CancellationToken token)
     {
-        var createMaterialRequestDto = new CreateMaterialRequestDto()
-        {
-            Name = command.Name,
-            Price = command.Price,
-            SellerId = command.SellerId,
-        };
-
-        var material = new Material(
-            createMaterialRequestDto.Name,
-            createMaterialRequestDto.Price,
-            createMaterialRequestDto.SellerId
-        );
+        var createMaterialRequestDto =
+            _mapper.Map<CreateMaterialRequestDto>(command);
+        var material = _mapper.Map<Material>(createMaterialRequestDto);
 
         _context.Materials.Add(material);
         await _context.SaveChangesAsync(token);
 
-        var createMaterialResponseDto = material.ToCreateMaterialResponseDto();
+        var createMaterialResponseDto =
+            _mapper.Map<CreateMaterialResponseDto?>(material);
         return createMaterialResponseDto;
     }
 }

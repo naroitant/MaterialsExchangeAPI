@@ -1,28 +1,40 @@
-﻿using MaterialsExchangeAPI.Application.Common.Interfaces;
-using MaterialsExchangeAPI.Application.Common.Mappings;
+﻿using AutoMapper;
+using MaterialsExchangeAPI.Application.Common;
+using MaterialsExchangeAPI.Application.Common.Interfaces;
 
 namespace MaterialsExchangeAPI.Application.Sellers.Queries.GetAllSellers;
 
 /// <summary>
 /// Запрос на получение всех продавцов
 /// </summary>
-public record GetAllSellersQuery : IRequest<List<GetSellerResponseDto>> { }
-
-public class GetAllSellersQueryHandler
-    : IRequestHandler<GetAllSellersQuery, List<GetSellerResponseDto>>
+public record GetAllSellersQuery : IRequest<List<GetSellerResponseDto>>
 {
-    private readonly IAppDbContext _context;
+    /// <summary>
+    /// Номер страницы
+    /// </summary>
+    public int PageNumber { get; set; }
 
-    public GetAllSellersQueryHandler(IAppDbContext context)
-    {
-        _context = context;
-    }
+    /// <summary>
+    /// Размер страницы
+    /// </summary>
+    public int PageSize { get; set; }
+}
+
+public class GetAllSellersQueryHandler : BaseHandler,
+    IRequestHandler<GetAllSellersQuery, List<GetSellerResponseDto>>
+{
+    public GetAllSellersQueryHandler(IAppDbContext context, IMapper mapper)
+        : base(context, mapper) { }
 
     public async Task<List<GetSellerResponseDto>> Handle(
         GetAllSellersQuery request, CancellationToken token)
     {
         var getSellerResponseDtos = await _context.Sellers
-            .Select(s => s.ToGetSellerResponseDto())
+            .OrderBy(s => s.Id)
+            .Select(s => _mapper.Map<GetSellerResponseDto>(s))
+            .AsNoTracking()
+            .Skip((request.PageNumber - 1) * request.PageSize)
+            .Take(request.PageSize)
             .ToListAsync(cancellationToken: token);
 
         return getSellerResponseDtos;

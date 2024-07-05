@@ -1,28 +1,40 @@
-﻿using MaterialsExchangeAPI.Application.Common.Interfaces;
-using MaterialsExchangeAPI.Application.Common.Mappings;
+﻿using AutoMapper;
+using MaterialsExchangeAPI.Application.Common;
+using MaterialsExchangeAPI.Application.Common.Interfaces;
 
 namespace MaterialsExchangeAPI.Application.Materials.Queries.GetAllMaterials;
 
 /// <summary>
 /// Запрос на получение всех материалов
 /// </summary>
-public record GetAllMaterialsQuery : IRequest<List<GetMaterialResponseDto>> { }
-
-public class GetAllMaterialsQueryHandler
-    : IRequestHandler<GetAllMaterialsQuery, List<GetMaterialResponseDto>>
+public record GetAllMaterialsQuery : IRequest<List<GetMaterialResponseDto>>
 {
-    private readonly IAppDbContext _context;
+    /// <summary>
+    /// Номер страницы
+    /// </summary>
+    public int PageNumber { get; set; }
 
-    public GetAllMaterialsQueryHandler(IAppDbContext context)
-    {
-        _context = context;
-    }
+    /// <summary>
+    /// Размер страницы
+    /// </summary>
+    public int PageSize { get; set; }
+}
+
+public class GetAllMaterialsQueryHandler : BaseHandler,
+    IRequestHandler<GetAllMaterialsQuery, List<GetMaterialResponseDto>>
+{
+    public GetAllMaterialsQueryHandler(IAppDbContext context, IMapper mapper)
+        : base(context, mapper) { }
 
     public async Task<List<GetMaterialResponseDto>> Handle(
         GetAllMaterialsQuery request, CancellationToken token)
     {
         var getMaterialResponseDtos = await _context.Materials
-            .Select(m => m.ToGetMaterialResponseDto())
+            .OrderBy(m => m.Id)
+            .Select(m => _mapper.Map<GetMaterialResponseDto>(m))
+            .AsNoTracking()
+            .Skip((request.PageNumber - 1) * request.PageSize)
+            .Take(request.PageSize)
             .ToListAsync(cancellationToken: token);
 
         return getMaterialResponseDtos;

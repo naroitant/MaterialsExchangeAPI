@@ -1,4 +1,6 @@
-﻿using MaterialsExchangeAPI.Application.Common.Interfaces;
+﻿using AutoMapper;
+using MaterialsExchangeAPI.Application.Common;
+using MaterialsExchangeAPI.Application.Common.Interfaces;
 
 namespace MaterialsExchangeAPI.Application.Sellers.Commands.DeleteSeller;
 
@@ -13,24 +15,17 @@ public record DeleteSellerCommand : IRequest<Boolean>
     public int Id;
 }
 
-public class DeleteSellerCommandHandler
-    : IRequestHandler<DeleteSellerCommand, Boolean>
+public class DeleteSellerCommandHandler : BaseHandler,
+    IRequestHandler<DeleteSellerCommand, Boolean>
 {
-    private readonly IAppDbContext _context;
-
-    public DeleteSellerCommandHandler(IAppDbContext context)
-    {
-        _context = context;
-    }
+    public DeleteSellerCommandHandler(IAppDbContext context, IMapper mapper)
+        : base(context, mapper) { }
 
     public async Task<Boolean> Handle(
         DeleteSellerCommand command, CancellationToken token)
     {
-        var deleteSellerRequestDto = new DeleteSellerRequestDto()
-        {
-            Id = command.Id,
-        };
-
+        var deleteSellerRequestDto =
+            _mapper.Map<DeleteSellerRequestDto>(command);
         var seller = await _context.Sellers.FirstOrDefaultAsync(
             u => u.Id == deleteSellerRequestDto.Id, token);
 

@@ -4,6 +4,7 @@ using MaterialsExchangeAPI.Application.Materials.Commands.UpdateMaterial;
 using MaterialsExchangeAPI.Application.Materials.Commands.UpdateMaterialPrices;
 using MaterialsExchangeAPI.Application.Materials.Queries.GetAllMaterials;
 using MaterialsExchangeAPI.Application.Materials.Queries.GetMaterialById;
+using MaterialsExchangeAPI.Infrastructure.Pagination;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MaterialsExchangeAPI.Web.Endpoints;
@@ -23,9 +24,13 @@ public class Materials : BaseController
     [HttpGet]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery] PageParameters pageParameters)
     {
-        var materials = await _mediator.Send(new GetAllMaterialsQuery());
+        var materials = await _mediator.Send(new GetAllMaterialsQuery()
+        {
+            PageNumber = pageParameters.PageNumber,
+            PageSize = pageParameters.PageSize,
+        });
 
         if (materials is null)
         {
@@ -47,8 +52,8 @@ public class Materials : BaseController
     [ProducesResponseType(404)]
     public async Task<IActionResult> GetById(int id)
     {
-        var material = await _mediator.Send(
-            new GetMaterialByIdQuery() { Id = id });
+        var material = await _mediator.Send(new GetMaterialByIdQuery()
+            { Id = id });
 
         if (material is null)
         {

@@ -1,4 +1,6 @@
-﻿using MaterialsExchangeAPI.Application.Common.Interfaces;
+﻿using AutoMapper;
+using MaterialsExchangeAPI.Application.Common;
+using MaterialsExchangeAPI.Application.Common.Interfaces;
 
 namespace MaterialsExchangeAPI.Application.Materials.Commands.DeleteMaterial;
 
@@ -13,24 +15,16 @@ public record DeleteMaterialCommand : IRequest<Boolean>
     public int Id;
 }
 
-public class DeleteMaterialCommandHandler 
-    : IRequestHandler<DeleteMaterialCommand, Boolean>
+public class DeleteMaterialCommandHandler : BaseHandler,
+    IRequestHandler<DeleteMaterialCommand, Boolean>
 {
-    private readonly IAppDbContext _context;
-
-    public DeleteMaterialCommandHandler(IAppDbContext context)
-    {
-        _context = context;
-    }
+    public DeleteMaterialCommandHandler(IAppDbContext context, IMapper mapper)
+        : base(context, mapper) { }
 
     public async Task<Boolean> Handle(
         DeleteMaterialCommand command, CancellationToken token)
     {
-        var deleteMaterialRequestDto = new DeleteMaterialRequestDto()
-        {
-            Id = command.Id,
-        };
-
+        var deleteMaterialRequestDto = _mapper.Map<DeleteMaterialRequestDto>(command);
         var material = await _context.Materials.FirstOrDefaultAsync(
             u => u.Id == deleteMaterialRequestDto.Id, token);
 

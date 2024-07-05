@@ -3,6 +3,7 @@ using MaterialsExchangeAPI.Application.Sellers.Commands.DeleteSeller;
 using MaterialsExchangeAPI.Application.Sellers.Commands.UpdateSeller;
 using MaterialsExchangeAPI.Application.Sellers.Queries.GetAllSellers;
 using MaterialsExchangeAPI.Application.Sellers.Queries.GetSellerById;
+using MaterialsExchangeAPI.Infrastructure.Pagination;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MaterialsExchangeAPI.Web.Endpoints;
@@ -22,9 +23,13 @@ public class Sellers : BaseController
     [HttpGet]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery] PageParameters pageParameters)
     {
-        var sellers = await _mediator.Send(new GetAllSellersQuery());
+        var sellers = await _mediator.Send(new GetAllSellersQuery()
+        {
+            PageNumber = pageParameters.PageNumber,
+            PageSize = pageParameters.PageSize,
+        });
         
         if (sellers is null)
         {

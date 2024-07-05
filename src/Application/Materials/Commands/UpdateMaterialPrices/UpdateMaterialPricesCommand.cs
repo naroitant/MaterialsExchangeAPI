@@ -20,8 +20,8 @@ public class UpdateMaterialPricesCommandHandler
     public async Task<Boolean> Handle(
         UpdateMaterialPricesCommand command, CancellationToken token)
     {
-        var materials =
-            await _context.Materials.ToListAsync(cancellationToken: token);
+        var materials = await _context.Materials
+            .ToListAsync(cancellationToken: token);
 
         if (materials.Any())
         {

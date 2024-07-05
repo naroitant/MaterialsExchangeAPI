@@ -4,7 +4,7 @@
         <name>Web</name>
     </assembly>
     <members>
-        <member name="M:MaterialsExchangeAPI.Web.Endpoints.Materials.GetAll">
+        <member name="M:MaterialsExchangeAPI.Web.Endpoints.Materials.GetAll(MaterialsExchangeAPI.Infrastructure.Pagination.PageParameters)">
             <summary>
             Получение всех материалов
             </summary>
@@ -72,7 +72,7 @@
             <response code="200">Цены материалов успешно обновлены</response>
             <response code="404">Материалов не найдено</response>
         </member>
-        <member name="M:MaterialsExchangeAPI.Web.Endpoints.Sellers.GetAll">
+        <member name="M:MaterialsExchangeAPI.Web.Endpoints.Sellers.GetAll(MaterialsExchangeAPI.Infrastructure.Pagination.PageParameters)">
             <summary>
             Получение всех продавцов
             </summary>
