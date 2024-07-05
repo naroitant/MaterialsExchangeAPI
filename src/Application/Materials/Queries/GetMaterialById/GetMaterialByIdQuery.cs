@@ -1,5 +1,6 @@
-﻿using MaterialsExchangeAPI.Application.Common.Interfaces;
-using MaterialsExchangeAPI.Application.Common.Mappings;
+﻿using AutoMapper;
+using MaterialsExchangeAPI.Application.Common;
+using MaterialsExchangeAPI.Application.Common.Interfaces;
 
 namespace MaterialsExchangeAPI.Application.Materials.Queries.GetMaterialById;
 
@@ -14,29 +15,29 @@ public record GetMaterialByIdQuery : IRequest<GetMaterialResponseDto?>
     public int Id;
 }
 
-public class GetMaterialByIdQueryHandler
-    : IRequestHandler<GetMaterialByIdQuery, GetMaterialResponseDto?>
+public class GetMaterialByIdQueryHandler : BaseHandler,
+    IRequestHandler<GetMaterialByIdQuery, GetMaterialResponseDto?>
 {
-    private readonly IAppDbContext _context;
-
-    public GetMaterialByIdQueryHandler(IAppDbContext context)
-    {
-        _context = context;
-    }
+    public GetMaterialByIdQueryHandler(IAppDbContext context, IMapper mapper)
+        : base(context, mapper) { }
 
     public async Task<GetMaterialResponseDto?> Handle(
         GetMaterialByIdQuery request, CancellationToken token)
     {
+        var getMaterialByIdRequestDto =
+            _mapper.Map<GetMaterialByIdRequestDto>(request);
         var material = await _context.Materials
             .AsNoTracking()
-            .FirstOrDefaultAsync(u => u.Id == request.Id, token);
+            .FirstOrDefaultAsync(u =>
+                u.Id == getMaterialByIdRequestDto.Id, token);
 
         if (material is null)
         {
             return null;
         }
 
-        var getMaterialResponseDto = material.ToGetMaterialResponseDto();
+        var getMaterialResponseDto =
+            _mapper.Map<GetMaterialResponseDto>(material);
         return getMaterialResponseDto;
     }
 }

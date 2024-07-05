@@ -1,5 +1,6 @@
-﻿using MaterialsExchangeAPI.Application.Common.Interfaces;
-using MaterialsExchangeAPI.Application.Common.Mappings;
+﻿using AutoMapper;
+using MaterialsExchangeAPI.Application.Common;
+using MaterialsExchangeAPI.Application.Common.Interfaces;
 
 namespace MaterialsExchangeAPI.Application.Materials.Commands.UpdateMaterial;
 
@@ -29,27 +30,17 @@ public record UpdateMaterialCommand : IRequest<UpdateMaterialResponseDto?>
     public int SellerId;
 }
 
-public class UpdateMaterialCommandHandler
-    : IRequestHandler<UpdateMaterialCommand, UpdateMaterialResponseDto?>
+public class UpdateMaterialCommandHandler : BaseHandler,
+    IRequestHandler<UpdateMaterialCommand, UpdateMaterialResponseDto?>
 {
-    private readonly IAppDbContext _context;
-
-    public UpdateMaterialCommandHandler(IAppDbContext context)
-    {
-        _context = context;
-    }
+    public UpdateMaterialCommandHandler(IAppDbContext context, IMapper mapper)
+        : base(context, mapper) { }
 
     public async Task<UpdateMaterialResponseDto?> Handle(
         UpdateMaterialCommand command, CancellationToken token)
     {
-        var updateMaterialRequestDto = new UpdateMaterialRequestDto()
-        {
-            Id = command.Id,
-            Name = command.Name,
-            Price = command.Price,
-            SellerId = command.SellerId
-        };
-
+        var updateMaterialRequestDto =
+            _mapper.Map<UpdateMaterialRequestDto>(command);
         var material = await _context.Materials.FirstOrDefaultAsync(
             u => u.Id == updateMaterialRequestDto.Id, token);
 
@@ -66,8 +57,7 @@ public class UpdateMaterialCommandHandler
         await _context.SaveChangesAsync(token);
 
         var updateMaterialResponseDto =
-            material.ToUpdateMaterialResponseDto();
-
+            _mapper.Map<UpdateMaterialResponseDto>(material);
         return updateMaterialResponseDto;
     }
 }

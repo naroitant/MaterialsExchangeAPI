@@ -1,5 +1,6 @@
-﻿using MaterialsExchangeAPI.Application.Common.Interfaces;
-using MaterialsExchangeAPI.Application.Common.Mappings;
+﻿using AutoMapper;
+using MaterialsExchangeAPI.Application.Common;
+using MaterialsExchangeAPI.Application.Common.Interfaces;
 
 namespace MaterialsExchangeAPI.Application.Sellers.Commands.UpdateSeller;
 
@@ -19,25 +20,17 @@ public record UpdateSellerCommand : IRequest<UpdateSellerResponseDto?>
     public string Name = string.Empty;
 }
 
-public class UpdateSellerCommandHandler 
-    : IRequestHandler<UpdateSellerCommand, UpdateSellerResponseDto?>
+public class UpdateSellerCommandHandler : BaseHandler,
+    IRequestHandler<UpdateSellerCommand, UpdateSellerResponseDto?>
 {
-    private readonly IAppDbContext _context;
-
-    public UpdateSellerCommandHandler(IAppDbContext context)
-    {
-        _context = context;
-    }
+    public UpdateSellerCommandHandler(IAppDbContext context, IMapper mapper)
+        : base(context, mapper) { }
 
     public async Task<UpdateSellerResponseDto?> Handle(
         UpdateSellerCommand command, CancellationToken token)
     {
-        var updateSellerRequestDto = new UpdateSellerRequestDto()
-        {
-            Id = command.Id,
-            Name = command.Name,
-        };
-
+        var updateSellerRequestDto =
+            _mapper.Map<UpdateSellerRequestDto>(command);
         var seller = await _context.Sellers.FirstOrDefaultAsync(
             u => u.Id == updateSellerRequestDto.Id, token);
 
@@ -49,8 +42,8 @@ public class UpdateSellerCommandHandler
         seller.Update(updateSellerRequestDto.Name);
         await _context.SaveChangesAsync(token);
 
-        var updateSellerResponseDto = seller.ToUpdateSellerResponseDto();
-
+        var updateSellerResponseDto =
+            _mapper.Map<UpdateSellerResponseDto>(seller);
         return updateSellerResponseDto;
     }
 }

@@ -1,5 +1,6 @@
-﻿using MaterialsExchangeAPI.Application.Common.Interfaces;
-using MaterialsExchangeAPI.Application.Common.Mappings;
+﻿using AutoMapper;
+using MaterialsExchangeAPI.Application.Common;
+using MaterialsExchangeAPI.Application.Common.Interfaces;
 
 namespace MaterialsExchangeAPI.Application.Sellers.Queries.GetSellerById;
 
@@ -14,29 +15,29 @@ public record GetSellerByIdQuery : IRequest<GetSellerResponseDto?>
     public int Id;
 }
 
-public class GetSellerByIdQueryHandler
-    : IRequestHandler<GetSellerByIdQuery, GetSellerResponseDto?>
+public class GetSellerByIdQueryHandler : BaseHandler,
+    IRequestHandler<GetSellerByIdQuery, GetSellerResponseDto?>
 {
-    private readonly IAppDbContext _context;
-
-    public GetSellerByIdQueryHandler(IAppDbContext context)
-    {
-        _context = context;
-    }
+    public GetSellerByIdQueryHandler(IAppDbContext context, IMapper mapper)
+        : base(context, mapper) { }
 
     public async Task<GetSellerResponseDto?> Handle(GetSellerByIdQuery request,
         CancellationToken token)
     {
+        var getSellerByIdRequestDto =
+            _mapper.Map<GetSellerByIdRequestDto>(request);
         var seller = await _context.Sellers
             .AsNoTracking()
-            .FirstOrDefaultAsync(u => u.Id == request.Id, token);
+            .FirstOrDefaultAsync(u => 
+                u.Id == getSellerByIdRequestDto.Id, token);
 
         if (seller is null)
         {
             return null;
         }
 
-        var getSellerResponseDto = seller.ToGetSellerResponseDto();
+        var getSellerResponseDto =
+            _mapper.Map<GetSellerResponseDto>(seller);
         return getSellerResponseDto;
     }
 }

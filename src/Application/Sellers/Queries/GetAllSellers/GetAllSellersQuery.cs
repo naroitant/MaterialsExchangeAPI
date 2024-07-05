@@ -1,5 +1,6 @@
-﻿using MaterialsExchangeAPI.Application.Common.Interfaces;
-using MaterialsExchangeAPI.Application.Common.Mappings;
+﻿using AutoMapper;
+using MaterialsExchangeAPI.Application.Common;
+using MaterialsExchangeAPI.Application.Common.Interfaces;
 
 namespace MaterialsExchangeAPI.Application.Sellers.Queries.GetAllSellers;
 
@@ -19,21 +20,18 @@ public record GetAllSellersQuery : IRequest<List<GetSellerResponseDto>>
     public int PageSize { get; set; }
 }
 
-public class GetAllSellersQueryHandler
-    : IRequestHandler<GetAllSellersQuery, List<GetSellerResponseDto>>
+public class GetAllSellersQueryHandler : BaseHandler,
+    IRequestHandler<GetAllSellersQuery, List<GetSellerResponseDto>>
 {
-    private readonly IAppDbContext _context;
-
-    public GetAllSellersQueryHandler(IAppDbContext context)
-    {
-        _context = context;
-    }
+    public GetAllSellersQueryHandler(IAppDbContext context, IMapper mapper)
+        : base(context, mapper) { }
 
     public async Task<List<GetSellerResponseDto>> Handle(
         GetAllSellersQuery request, CancellationToken token)
     {
         var getSellerResponseDtos = await _context.Sellers
-            .Select(s => s.ToGetSellerResponseDto())
+            .OrderBy(s => s.Id)
+            .Select(s => _mapper.Map<GetSellerResponseDto>(s))
             .AsNoTracking()
             .Skip((request.PageNumber - 1) * request.PageSize)
             .Take(request.PageSize)
