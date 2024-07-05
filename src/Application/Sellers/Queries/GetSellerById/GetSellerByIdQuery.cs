@@ -27,8 +27,9 @@ public class GetSellerByIdQueryHandler
     public async Task<GetSellerResponseDto?> Handle(GetSellerByIdQuery request,
         CancellationToken token)
     {
-        var seller = await _context.Sellers.FirstOrDefaultAsync(
-            u => u.Id == request.Id, token);
+        var seller = await _context.Sellers
+            .AsNoTracking()
+            .FirstOrDefaultAsync(u => u.Id == request.Id, token);
 
         if (seller is null)
         {

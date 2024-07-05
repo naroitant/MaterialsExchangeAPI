@@ -27,8 +27,9 @@ public class GetMaterialByIdQueryHandler
     public async Task<GetMaterialResponseDto?> Handle(
         GetMaterialByIdQuery request, CancellationToken token)
     {
-        var material = await _context.Materials.FirstOrDefaultAsync(
-            u => u.Id == request.Id, token);
+        var material = await _context.Materials
+            .AsNoTracking()
+            .FirstOrDefaultAsync(u => u.Id == request.Id, token);
 
         if (material is null)
         {
