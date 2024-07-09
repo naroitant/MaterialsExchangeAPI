@@ -1,20 +1,20 @@
-﻿using MaterialsExchangeAPI.Infrastructure.Data;
+﻿using Infrastructure.Data;
 using Microsoft.AspNetCore.Http;
 
-namespace MaterialsExchangeAPI.Infrastructure.Services;
+namespace Infrastructure.Middlewares;
 
 public class DbTransactionMiddleware : IMiddleware
 {
-    private readonly AppDbContext _context;
+    private readonly AppDbContext Context;
 
     public DbTransactionMiddleware(AppDbContext context)
     {
-        _context = context;
+        Context = context;
     }
 
     public async Task InvokeAsync(HttpContext httpContext, RequestDelegate next)
     {
-        using var transaction = await _context.Database.BeginTransactionAsync();
+        await using var transaction = await Context.Database.BeginTransactionAsync();
 
         if (httpContext.Request.Method.Equals("GET",
             StringComparison.CurrentCultureIgnoreCase))

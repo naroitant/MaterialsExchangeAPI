@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using MaterialsExchangeAPI.Application.Common;
-using MaterialsExchangeAPI.Application.Common.Interfaces;
+using Application.Common;
+using Application.Common.Interfaces;
 
-namespace MaterialsExchangeAPI.Application.Sellers.Commands.UpdateSeller;
+namespace Application.Sellers.Commands.UpdateSeller;
 
 /// <summary>
 /// Команда обновления продавца
@@ -12,12 +12,12 @@ public record UpdateSellerCommand : IRequest<UpdateSellerResponseDto?>
     /// <summary>
     /// Уникальный идентификатор продавца
     /// </summary>
-    public int Id;
+    public int Id { get; init; }
 
     /// <summary>
     /// Имя продавца
     /// </summary>
-    public string Name = string.Empty;
+    public string Name { get; init; } = string.Empty;
 }
 
 public class UpdateSellerCommandHandler : BaseHandler,
@@ -30,8 +30,8 @@ public class UpdateSellerCommandHandler : BaseHandler,
         UpdateSellerCommand command, CancellationToken token)
     {
         var updateSellerRequestDto =
-            _mapper.Map<UpdateSellerRequestDto>(command);
-        var seller = await _context.Sellers.FirstOrDefaultAsync(
+            Mapper.Map<UpdateSellerRequestDto>(command);
+        var seller = await Context.Sellers.FirstOrDefaultAsync(
             u => u.Id == updateSellerRequestDto.Id, token);
 
         if (seller is null)
@@ -40,10 +40,10 @@ public class UpdateSellerCommandHandler : BaseHandler,
         }
 
         seller.Update(updateSellerRequestDto.Name);
-        await _context.SaveChangesAsync(token);
+        await Context.SaveChangesAsync(token);
 
         var updateSellerResponseDto =
-            _mapper.Map<UpdateSellerResponseDto>(seller);
+            Mapper.Map<UpdateSellerResponseDto>(seller);
         return updateSellerResponseDto;
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace MaterialsExchangeAPI.Application.Materials.Commands.DeleteMaterial;
+﻿namespace Application.Materials.Commands.DeleteMaterial;
 
 public class DeleteMaterialCommandValidator
     : AbstractValidator<DeleteMaterialCommand>

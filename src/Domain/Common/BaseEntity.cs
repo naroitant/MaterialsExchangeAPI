@@ -1,11 +1,6 @@
-﻿namespace MaterialsExchangeAPI.Domain.Common;
+﻿namespace Domain.Common;
 
 public abstract class BaseEntity
 {
     public int Id { get; private set; }
-
-    public void SetId(int id)
-    { 
-        Id = id; 
-    }
 }

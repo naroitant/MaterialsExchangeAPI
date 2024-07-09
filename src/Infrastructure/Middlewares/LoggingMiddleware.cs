@@ -3,14 +3,14 @@ using Serilog;
 using Serilog.Events;
 using System.Diagnostics;
 
-namespace MaterialsExchangeAPI.Infrastructure.Services;
+namespace Infrastructure.Middlewares;
 
 public class LoggingMiddleware : IMiddleware
 {
     private static readonly ILogger Log = 
         Serilog.Log.ForContext<LoggingMiddleware>();
 
-    const string MessageTemplate = 
+    private const string MessageTemplate = 
         "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms";
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)

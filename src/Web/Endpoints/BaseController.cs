@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace MaterialsExchangeAPI.Web.Endpoints;
+namespace Web.Endpoints;
 
 public abstract class BaseController : Controller
 {
-    protected readonly IMediator _mediator;
+    protected readonly IMediator Mediator;
 
     protected BaseController(IMediator mediator)
     {
-        _mediator = mediator;
+        Mediator = mediator;
     }
 }

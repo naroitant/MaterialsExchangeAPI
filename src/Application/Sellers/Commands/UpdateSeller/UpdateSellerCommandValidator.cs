@@ -1,4 +1,4 @@
-﻿namespace MaterialsExchangeAPI.Application.Sellers.Commands.UpdateSeller;
+﻿namespace Application.Sellers.Commands.UpdateSeller;
 
 public class DeleteSellerCommandValidator : AbstractValidator<UpdateSellerCommand>
 {

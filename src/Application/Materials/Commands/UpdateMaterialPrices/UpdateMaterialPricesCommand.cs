@@ -1,14 +1,14 @@
-﻿using MaterialsExchangeAPI.Application.Common.Interfaces;
+﻿using Application.Common.Interfaces;
 
-namespace MaterialsExchangeAPI.Application.Materials.Commands.UpdateMaterialPrices;
+namespace Application.Materials.Commands.UpdateMaterialPrices;
 
 /// <summary>
 /// Команда обновления цен материалов
 /// </summary>
-public record UpdateMaterialPricesCommand : IRequest <Boolean> { }
+public record UpdateMaterialPricesCommand : IRequest <bool> { }
 
 public class UpdateMaterialPricesCommandHandler 
-    : IRequestHandler<UpdateMaterialPricesCommand, Boolean>
+    : IRequestHandler<UpdateMaterialPricesCommand, bool>
 {
     private readonly IAppDbContext _context;
 
@@ -17,25 +17,23 @@ public class UpdateMaterialPricesCommandHandler
         _context = context;
     }
 
-    public async Task<Boolean> Handle(
+    public async Task<bool> Handle(
         UpdateMaterialPricesCommand command, CancellationToken token)
     {
         var materials = await _context.Materials
             .ToListAsync(cancellationToken: token);
 
-        if (materials.Any())
+        if (!materials.Any()) return false;
+        
+        foreach (var material in materials)
         {
-            foreach (var material in materials)
-            {
-                material.UpdatePriceRandomly();
-                token.ThrowIfCancellationRequested();
-            }
-
-            await _context.SaveChangesAsync(token);
-
-            return true;
+            material.UpdatePriceRandomly();
+            token.ThrowIfCancellationRequested();
         }
 
-        return false;
+        await _context.SaveChangesAsync(token);
+
+        return true;
+
     }
 }

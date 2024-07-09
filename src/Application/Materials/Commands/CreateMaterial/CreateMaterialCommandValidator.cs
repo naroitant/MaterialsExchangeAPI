@@ -1,4 +1,4 @@
-﻿namespace MaterialsExchangeAPI.Application.Materials.Commands.CreateMaterial;
+﻿namespace Application.Materials.Commands.CreateMaterial;
 
 public class CreateMaterialCommandValidator
     : AbstractValidator<CreateMaterialCommand>

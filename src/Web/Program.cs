@@ -1,12 +1,12 @@
 using Hangfire;
-using MaterialsExchangeAPI.Infrastructure.Hangfire;
-using MaterialsExchangeAPI.Infrastructure.Services;
+using Infrastructure.Middlewares;
 using Microsoft.AspNetCore.Diagnostics;
 using Serilog;
+using Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Регистрируем сервисы из разных сборок.
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddWebServices();
@@ -34,7 +34,7 @@ app.UseHttpsRedirection();
 app.UseMiddleware<LoggingMiddleware>();
 app.UseMiddleware<DbTransactionMiddleware>();
 
-app.UseExceptionHandler(builder => builder.Run(async context =>
+app.UseExceptionHandler(applicationBuilder => applicationBuilder.Run(async context =>
 {
     context.Response.StatusCode = 500;
     context.Response.ContentType = "text/plain";

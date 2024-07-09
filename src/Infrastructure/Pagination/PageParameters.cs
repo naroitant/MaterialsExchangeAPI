@@ -1,22 +1,17 @@
-﻿namespace MaterialsExchangeAPI.Infrastructure.Pagination;
+﻿namespace Infrastructure.Pagination;
 
 public class PageParameters
 {
-    const int maxPageSize = 50;
+    private const int MaxPageSize = 50;
     private int _pageSize = 10;
 
     public int PageNumber { get; set; } = 1;
     public int PageSize
     {
-        get
-        {
-            return _pageSize;
-        }
-        set
-        {
-            _pageSize = (value > maxPageSize)
-                ? maxPageSize
+        get => _pageSize;
+        set =>
+            _pageSize = (value > MaxPageSize)
+                ? MaxPageSize
                 : value;
-        }
     }
 }

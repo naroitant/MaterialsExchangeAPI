@@ -1,6 +1,6 @@
-﻿namespace MaterialsExchangeAPI.Application.Sellers.Queries.GetSellerById;
+﻿namespace Application.Sellers.Queries.GetSellerById;
 
 public record GetSellerByIdRequestDto
 {
-    public int Id { get; set; }
+    public int Id { get; init; }
 }

@@ -1,16 +1,16 @@
 ﻿using AutoMapper;
-using MaterialsExchangeAPI.Application.Common.Interfaces;
+using Application.Common.Interfaces;
 
-namespace MaterialsExchangeAPI.Application.Common;
+namespace Application.Common;
 
 public abstract class BaseHandler
 {
-    protected readonly IAppDbContext _context;
-    protected readonly IMapper _mapper;
+    protected readonly IAppDbContext Context;
+    protected readonly IMapper Mapper;
 
     protected BaseHandler(IAppDbContext context, IMapper mapper)
     {
-        _context = context;
-        _mapper = mapper;
+        Context = context;
+        Mapper = mapper;
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace MaterialsExchangeAPI.Application.Sellers.Commands.CreateSeller;
+﻿namespace Application.Sellers.Commands.CreateSeller;
 
 public record CreateSellerRequestDto
 {

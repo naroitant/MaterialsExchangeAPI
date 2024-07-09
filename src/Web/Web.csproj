@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DocumentationFile>C:\Users\naro2\source\repos\MaterialsExchangeAPI\MaterialsExchangeAPI.xml</DocumentationFile>
+    <DocumentationFile>C:\Users\naro2\source\repos\MaterialsExchangeAPI\xml</DocumentationFile>
     <NoWarn>CS1591</NoWarn>
   </PropertyGroup>
 

@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using MaterialsExchangeAPI.Application.Common;
-using MaterialsExchangeAPI.Application.Common.Interfaces;
-using MaterialsExchangeAPI.Domain.Entities;
+using Application.Common;
+using Application.Common.Interfaces;
+using Domain.Entities;
 
-namespace MaterialsExchangeAPI.Application.Materials.Commands.CreateMaterial;
+namespace Application.Materials.Commands.CreateMaterial;
 
 /// <summary>
 /// Команда создания материала
@@ -13,17 +13,17 @@ public record CreateMaterialCommand : IRequest<CreateMaterialResponseDto?>
     /// <summary>
     /// Название материала
     /// </summary>
-    public string Name = string.Empty;
+    public string Name { get; init; } = string.Empty;
 
     /// <summary>
     /// Стоимость материала
     /// </summary>
-    public decimal Price;
+    public decimal Price { get; init; }
 
     /// <summary>
     /// Уникальный идентификатор продавца
     /// </summary>
-    public int SellerId;
+    public int SellerId { get; init; }
 }
 
 public class CreateMaterialCommandHandler : BaseHandler,
@@ -36,14 +36,14 @@ public class CreateMaterialCommandHandler : BaseHandler,
         CreateMaterialCommand command, CancellationToken token)
     {
         var createMaterialRequestDto =
-            _mapper.Map<CreateMaterialRequestDto>(command);
-        var material = _mapper.Map<Material>(createMaterialRequestDto);
+            Mapper.Map<CreateMaterialRequestDto>(command);
+        var material = Mapper.Map<Material>(createMaterialRequestDto);
 
-        _context.Materials.Add(material);
-        await _context.SaveChangesAsync(token);
+        Context.Materials.Add(material);
+        await Context.SaveChangesAsync(token);
 
         var createMaterialResponseDto =
-            _mapper.Map<CreateMaterialResponseDto?>(material);
+            Mapper.Map<CreateMaterialResponseDto?>(material);
         return createMaterialResponseDto;
     }
 }

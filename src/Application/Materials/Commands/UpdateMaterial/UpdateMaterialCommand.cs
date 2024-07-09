@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using MaterialsExchangeAPI.Application.Common;
-using MaterialsExchangeAPI.Application.Common.Interfaces;
+using Application.Common;
+using Application.Common.Interfaces;
 
-namespace MaterialsExchangeAPI.Application.Materials.Commands.UpdateMaterial;
+namespace Application.Materials.Commands.UpdateMaterial;
 
 /// <summary>
 /// Команда обновления информации о материале
@@ -12,22 +12,23 @@ public record UpdateMaterialCommand : IRequest<UpdateMaterialResponseDto?>
     /// <summary>
     /// Уникальный идентификатор материала
     /// </summary>
-    public int Id;
+    public int Id { get; init; }
+
 
     /// <summary>
     /// Название материала
     /// </summary>
-    public string Name = string.Empty;
+    public string Name { get; init; } = string.Empty;
 
     /// <summary>
     /// Стоимость материала
     /// </summary>
-    public decimal Price;
+    public decimal Price { get; init; }
 
     /// <summary>
     /// Уникальный идентификатор продавца
     /// </summary>
-    public int SellerId;
+    public int SellerId { get; init; }
 }
 
 public class UpdateMaterialCommandHandler : BaseHandler,
@@ -40,8 +41,8 @@ public class UpdateMaterialCommandHandler : BaseHandler,
         UpdateMaterialCommand command, CancellationToken token)
     {
         var updateMaterialRequestDto =
-            _mapper.Map<UpdateMaterialRequestDto>(command);
-        var material = await _context.Materials.FirstOrDefaultAsync(
+            Mapper.Map<UpdateMaterialRequestDto>(command);
+        var material = await Context.Materials.FirstOrDefaultAsync(
             u => u.Id == updateMaterialRequestDto.Id, token);
 
         if (material is null)
@@ -54,10 +55,10 @@ public class UpdateMaterialCommandHandler : BaseHandler,
             updateMaterialRequestDto.Price, 
             updateMaterialRequestDto.SellerId
         );
-        await _context.SaveChangesAsync(token);
+        await Context.SaveChangesAsync(token);
 
         var updateMaterialResponseDto =
-            _mapper.Map<UpdateMaterialResponseDto>(material);
+            Mapper.Map<UpdateMaterialResponseDto>(material);
         return updateMaterialResponseDto;
     }
 }

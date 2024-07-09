@@ -1,32 +1,32 @@
 ﻿using AutoMapper;
-using MaterialsExchangeAPI.Application.Common;
-using MaterialsExchangeAPI.Application.Common.Interfaces;
+using Application.Common;
+using Application.Common.Interfaces;
 
-namespace MaterialsExchangeAPI.Application.Sellers.Commands.DeleteSeller;
+namespace Application.Sellers.Commands.DeleteSeller;
 
 /// <summary>
 /// Команда удаления продавца
 /// </summary>
-public record DeleteSellerCommand : IRequest<Boolean>
+public record DeleteSellerCommand : IRequest<bool>
 {
     /// <summary>
     /// Уникальный идентификатор продавца
     /// </summary>
-    public int Id;
+    public int Id { get; init; }
 }
 
 public class DeleteSellerCommandHandler : BaseHandler,
-    IRequestHandler<DeleteSellerCommand, Boolean>
+    IRequestHandler<DeleteSellerCommand, bool>
 {
     public DeleteSellerCommandHandler(IAppDbContext context, IMapper mapper)
         : base(context, mapper) { }
 
-    public async Task<Boolean> Handle(
+    public async Task<bool> Handle(
         DeleteSellerCommand command, CancellationToken token)
     {
         var deleteSellerRequestDto =
-            _mapper.Map<DeleteSellerRequestDto>(command);
-        var seller = await _context.Sellers.FirstOrDefaultAsync(
+            Mapper.Map<DeleteSellerRequestDto>(command);
+        var seller = await Context.Sellers.FirstOrDefaultAsync(
             u => u.Id == deleteSellerRequestDto.Id, token);
 
         if (seller is null)
@@ -34,8 +34,8 @@ public class DeleteSellerCommandHandler : BaseHandler,
             return false;
         }
 
-        _context.Sellers.Remove(seller);
-        await _context.SaveChangesAsync(token);
+        Context.Sellers.Remove(seller);
+        await Context.SaveChangesAsync(token);
 
         return true;
     }

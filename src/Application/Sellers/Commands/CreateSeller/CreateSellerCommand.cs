@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using MaterialsExchangeAPI.Application.Common;
-using MaterialsExchangeAPI.Application.Common.Interfaces;
-using MaterialsExchangeAPI.Domain.Entities;
+using Application.Common;
+using Application.Common.Interfaces;
+using Domain.Entities;
 
-namespace MaterialsExchangeAPI.Application.Sellers.Commands.CreateSeller;
+namespace Application.Sellers.Commands.CreateSeller;
 
 /// <summary>
 /// Команда создания продавца
@@ -13,7 +13,7 @@ public record CreateSellerCommand : IRequest<CreateSellerResponseDto?>
     /// <summary>
     /// Имя продавца
     /// </summary>
-    public string Name = string.Empty;
+    public string Name { get; init; } = string.Empty;
 }
 
 public class CreateSellerCommandHandler : BaseHandler,
@@ -26,14 +26,14 @@ public class CreateSellerCommandHandler : BaseHandler,
         CreateSellerCommand command, CancellationToken token)
     {
         var createSellerRequestDto =
-            _mapper.Map<CreateSellerRequestDto>(command);
-        var seller = _mapper.Map<Seller>(createSellerRequestDto);
+            Mapper.Map<CreateSellerRequestDto>(command);
+        var seller = Mapper.Map<Seller>(createSellerRequestDto);
 
-        _context.Sellers.Add(seller);
-        await _context.SaveChangesAsync(token);
+        Context.Sellers.Add(seller);
+        await Context.SaveChangesAsync(token);
 
         var createSellerResponseDto =
-            _mapper.Map<CreateSellerResponseDto?>(seller);
+            Mapper.Map<CreateSellerResponseDto?>(seller);
         return createSellerResponseDto;
     }
 }

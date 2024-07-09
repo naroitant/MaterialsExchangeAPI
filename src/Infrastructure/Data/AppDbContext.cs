@@ -1,9 +1,9 @@
-﻿using MaterialsExchangeAPI.Application.Common.Interfaces;
-using MaterialsExchangeAPI.Domain.Entities;
+﻿using Application.Common.Interfaces;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
-namespace MaterialsExchangeAPI.Infrastructure.Data;
+namespace Infrastructure.Data;
 
 public class AppDbContext : DbContext, IAppDbContext
 {
@@ -11,7 +11,6 @@ public class AppDbContext : DbContext, IAppDbContext
         : base(options) { }
 
     public DbSet<Material> Materials => Set<Material>();
-
     public DbSet<Seller> Sellers => Set<Seller>();
 
     protected override void OnModelCreating(ModelBuilder builder)

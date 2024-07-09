@@ -1,6 +1,6 @@
 ﻿using FluentValidation.Results;
 
-namespace MaterialsExchangeAPI.Application.Common.Exceptions;
+namespace Application.Common.Exceptions;
 
 public class ValidationException : Exception
 {    public IDictionary<string, string[]> Errors { get; }

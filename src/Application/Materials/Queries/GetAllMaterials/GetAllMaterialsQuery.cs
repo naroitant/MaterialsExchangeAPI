@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using MaterialsExchangeAPI.Application.Common;
-using MaterialsExchangeAPI.Application.Common.Interfaces;
+using Application.Common;
+using Application.Common.Interfaces;
 
-namespace MaterialsExchangeAPI.Application.Materials.Queries.GetAllMaterials;
+namespace Application.Materials.Queries.GetAllMaterials;
 
 /// <summary>
 /// Запрос на получение всех материалов
@@ -12,12 +12,12 @@ public record GetAllMaterialsQuery : IRequest<List<GetMaterialResponseDto>>
     /// <summary>
     /// Номер страницы
     /// </summary>
-    public int PageNumber { get; set; }
+    public int PageNumber { get; init; }
 
     /// <summary>
     /// Размер страницы
     /// </summary>
-    public int PageSize { get; set; }
+    public int PageSize { get; init; }
 }
 
 public class GetAllMaterialsQueryHandler : BaseHandler,
@@ -29,9 +29,9 @@ public class GetAllMaterialsQueryHandler : BaseHandler,
     public async Task<List<GetMaterialResponseDto>> Handle(
         GetAllMaterialsQuery request, CancellationToken token)
     {
-        var getMaterialResponseDtos = await _context.Materials
+        var getMaterialResponseDtos = await Context.Materials
             .OrderBy(m => m.Id)
-            .Select(m => _mapper.Map<GetMaterialResponseDto>(m))
+            .Select(m => Mapper.Map<GetMaterialResponseDto>(m))
             .AsNoTracking()
             .Skip((request.PageNumber - 1) * request.PageSize)
             .Take(request.PageSize)

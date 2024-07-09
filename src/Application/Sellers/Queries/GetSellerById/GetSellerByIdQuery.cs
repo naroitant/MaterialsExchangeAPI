@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using MaterialsExchangeAPI.Application.Common;
-using MaterialsExchangeAPI.Application.Common.Interfaces;
+using Application.Common;
+using Application.Common.Interfaces;
 
-namespace MaterialsExchangeAPI.Application.Sellers.Queries.GetSellerById;
+namespace Application.Sellers.Queries.GetSellerById;
 
 /// <summary>
 /// Запрос на получение продавца по id
@@ -12,7 +12,7 @@ public record GetSellerByIdQuery : IRequest<GetSellerResponseDto?>
     /// <summary>
     /// Уникальный идентификатор продавца
     /// </summary>
-    public int Id;
+    public int Id { get; init; }
 }
 
 public class GetSellerByIdQueryHandler : BaseHandler,
@@ -25,8 +25,8 @@ public class GetSellerByIdQueryHandler : BaseHandler,
         CancellationToken token)
     {
         var getSellerByIdRequestDto =
-            _mapper.Map<GetSellerByIdRequestDto>(request);
-        var seller = await _context.Sellers
+            Mapper.Map<GetSellerByIdRequestDto>(request);
+        var seller = await Context.Sellers
             .AsNoTracking()
             .FirstOrDefaultAsync(u => 
                 u.Id == getSellerByIdRequestDto.Id, token);
@@ -37,7 +37,7 @@ public class GetSellerByIdQueryHandler : BaseHandler,
         }
 
         var getSellerResponseDto =
-            _mapper.Map<GetSellerResponseDto>(seller);
+            Mapper.Map<GetSellerResponseDto>(seller);
         return getSellerResponseDto;
     }
 }

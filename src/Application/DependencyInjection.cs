@@ -1,7 +1,7 @@
-﻿using MaterialsExchangeAPI.Application.Common.Mappings;
-using Hangfire;
+﻿using Hangfire;
 using Hangfire.PostgreSql;
-using MaterialsExchangeAPI.Application.Common.Behaviors;
+using Application.Common.Behaviors;
+using Application.Common.Mappings;
 using Microsoft.Extensions.Configuration;
 using System.Reflection;
 
@@ -17,7 +17,7 @@ public static class DependencyInjection
         services.AddSwaggerGen(options =>
         {
             var basePath = AppContext.BaseDirectory;
-            var xmlPath = Path.Combine(basePath, "MaterialsExchangeAPI.xml");
+            var xmlPath = Path.Combine(basePath, "xml");
 
             options.IncludeXmlComments(xmlPath);
         });

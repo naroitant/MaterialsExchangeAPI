@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using MaterialsExchangeAPI.Application.Common;
-using MaterialsExchangeAPI.Application.Common.Interfaces;
+using Application.Common;
+using Application.Common.Interfaces;
 
-namespace MaterialsExchangeAPI.Application.Materials.Queries.GetMaterialById;
+namespace Application.Materials.Queries.GetMaterialById;
 
 /// <summary>
 /// Запрос на получение материала по id
@@ -12,7 +12,7 @@ public record GetMaterialByIdQuery : IRequest<GetMaterialResponseDto?>
     /// <summary>
     /// Уникальный идентификатор материала
     /// </summary>
-    public int Id;
+    public int Id { get; init; }
 }
 
 public class GetMaterialByIdQueryHandler : BaseHandler,
@@ -25,8 +25,8 @@ public class GetMaterialByIdQueryHandler : BaseHandler,
         GetMaterialByIdQuery request, CancellationToken token)
     {
         var getMaterialByIdRequestDto =
-            _mapper.Map<GetMaterialByIdRequestDto>(request);
-        var material = await _context.Materials
+            Mapper.Map<GetMaterialByIdRequestDto>(request);
+        var material = await Context.Materials
             .AsNoTracking()
             .FirstOrDefaultAsync(u =>
                 u.Id == getMaterialByIdRequestDto.Id, token);
@@ -37,7 +37,7 @@ public class GetMaterialByIdQueryHandler : BaseHandler,
         }
 
         var getMaterialResponseDto =
-            _mapper.Map<GetMaterialResponseDto>(material);
+            Mapper.Map<GetMaterialResponseDto>(material);
         return getMaterialResponseDto;
     }
 }

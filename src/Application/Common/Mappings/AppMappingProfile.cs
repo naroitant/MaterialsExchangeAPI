@@ -1,17 +1,17 @@
 ﻿using AutoMapper;
-using MaterialsExchangeAPI.Application.Materials.Commands.CreateMaterial;
-using MaterialsExchangeAPI.Application.Materials.Commands.UpdateMaterial;
-using MaterialsExchangeAPI.Application.Materials.Commands.DeleteMaterial;
-using MaterialsExchangeAPI.Application.Materials.Queries;
-using MaterialsExchangeAPI.Application.Sellers.Commands.CreateSeller;
-using MaterialsExchangeAPI.Application.Sellers.Commands.UpdateSeller;
-using MaterialsExchangeAPI.Application.Sellers.Commands.DeleteSeller;
-using MaterialsExchangeAPI.Application.Sellers.Queries;
-using MaterialsExchangeAPI.Domain.Entities;
-using MaterialsExchangeAPI.Application.Materials.Queries.GetMaterialById;
-using MaterialsExchangeAPI.Application.Sellers.Queries.GetSellerById;
+using Application.Materials.Commands.CreateMaterial;
+using Application.Materials.Commands.UpdateMaterial;
+using Application.Materials.Commands.DeleteMaterial;
+using Application.Materials.Queries;
+using Application.Materials.Queries.GetMaterialById;
+using Application.Sellers.Commands.CreateSeller;
+using Application.Sellers.Commands.UpdateSeller;
+using Application.Sellers.Commands.DeleteSeller;
+using Application.Sellers.Queries;
+using Application.Sellers.Queries.GetSellerById;
+using Domain.Entities;
 
-namespace MaterialsExchangeAPI.Application.Common.Mappings;
+namespace Application.Common.Mappings;
 
 public class AppMappingProfile : Profile
 {

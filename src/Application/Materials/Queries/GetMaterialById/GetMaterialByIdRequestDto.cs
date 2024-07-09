@@ -1,6 +1,6 @@
-﻿namespace MaterialsExchangeAPI.Application.Materials.Queries.GetMaterialById;
+﻿namespace Application.Materials.Queries.GetMaterialById;
 
 public record GetMaterialByIdRequestDto
 {
-    public int Id { get; set; }
+    public int Id { get; init; }
 }

@@ -1,13 +1,13 @@
-﻿using MaterialsExchangeAPI.Application.Materials.Commands.CreateMaterial;
-using MaterialsExchangeAPI.Application.Materials.Commands.DeleteMaterial;
-using MaterialsExchangeAPI.Application.Materials.Commands.UpdateMaterial;
-using MaterialsExchangeAPI.Application.Materials.Commands.UpdateMaterialPrices;
-using MaterialsExchangeAPI.Application.Materials.Queries.GetAllMaterials;
-using MaterialsExchangeAPI.Application.Materials.Queries.GetMaterialById;
-using MaterialsExchangeAPI.Infrastructure.Pagination;
+﻿using Application.Materials.Commands.CreateMaterial;
+using Application.Materials.Commands.DeleteMaterial;
+using Application.Materials.Commands.UpdateMaterial;
+using Application.Materials.Commands.UpdateMaterialPrices;
+using Application.Materials.Queries.GetAllMaterials;
+using Application.Materials.Queries.GetMaterialById;
+using Infrastructure.Pagination;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MaterialsExchangeAPI.Web.Endpoints;
+namespace Web.Endpoints;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -26,13 +26,13 @@ public class Materials : BaseController
     [ProducesResponseType(404)]
     public async Task<IActionResult> GetAll([FromQuery] PageParameters pageParameters)
     {
-        var materials = await _mediator.Send(new GetAllMaterialsQuery()
+        var materials = await Mediator.Send(new GetAllMaterialsQuery()
         {
             PageNumber = pageParameters.PageNumber,
             PageSize = pageParameters.PageSize,
         });
 
-        if (materials is null)
+        if (materials.Count == 0)
         {
             return NotFound("No material found.");
         }
@@ -52,7 +52,7 @@ public class Materials : BaseController
     [ProducesResponseType(404)]
     public async Task<IActionResult> GetById(int id)
     {
-        var material = await _mediator.Send(new GetMaterialByIdQuery()
+        var material = await Mediator.Send(new GetMaterialByIdQuery()
             { Id = id });
 
         if (material is null)
@@ -91,7 +91,7 @@ public class Materials : BaseController
     public async Task<IActionResult> Create(string name, decimal price, 
         int sellerId)
     {
-        var material = await _mediator.Send(new CreateMaterialCommand() { 
+        var material = await Mediator.Send(new CreateMaterialCommand() { 
             Name = name, 
             Price = price, 
             SellerId = sellerId,
@@ -124,7 +124,7 @@ public class Materials : BaseController
     public async Task<IActionResult> Update(int id, string name, decimal price,
         int sellerId)
     {
-        var material = await _mediator.Send(new UpdateMaterialCommand()
+        var material = await Mediator.Send(new UpdateMaterialCommand()
         {
             Id = id,
             Name = name,
@@ -151,7 +151,7 @@ public class Materials : BaseController
     [ProducesResponseType(404)]
     public async Task<IActionResult> Delete(int id)
     {
-        var deletedMaterialIsFound = await _mediator.Send(
+        var deletedMaterialIsFound = await Mediator.Send(
             new DeleteMaterialCommand() { Id = id });
 
         if (deletedMaterialIsFound is false)
@@ -174,7 +174,7 @@ public class Materials : BaseController
     public async Task<IActionResult> UpdatePrices(
         UpdateMaterialPricesCommand command)
     {
-        var updatedMaterialsAreFound = await _mediator.Send(command);
+        var updatedMaterialsAreFound = await Mediator.Send(command);
 
         if (updatedMaterialsAreFound is false)
         {

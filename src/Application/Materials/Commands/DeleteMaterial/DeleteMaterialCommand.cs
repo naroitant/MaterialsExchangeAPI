@@ -1,31 +1,32 @@
 ﻿using AutoMapper;
-using MaterialsExchangeAPI.Application.Common;
-using MaterialsExchangeAPI.Application.Common.Interfaces;
+using Application.Common;
+using Application.Common.Interfaces;
 
-namespace MaterialsExchangeAPI.Application.Materials.Commands.DeleteMaterial;
+namespace Application.Materials.Commands.DeleteMaterial;
 
 /// <summary>
 /// Команда удаления материала
 /// </summary>
-public record DeleteMaterialCommand : IRequest<Boolean>
+public record DeleteMaterialCommand : IRequest<bool>
 {
     /// <summary>
     /// Уникальный идентификатор материала
     /// </summary>
-    public int Id;
+    public int Id { get; init; }
+
 }
 
 public class DeleteMaterialCommandHandler : BaseHandler,
-    IRequestHandler<DeleteMaterialCommand, Boolean>
+    IRequestHandler<DeleteMaterialCommand, bool>
 {
     public DeleteMaterialCommandHandler(IAppDbContext context, IMapper mapper)
         : base(context, mapper) { }
 
-    public async Task<Boolean> Handle(
+    public async Task<bool> Handle(
         DeleteMaterialCommand command, CancellationToken token)
     {
-        var deleteMaterialRequestDto = _mapper.Map<DeleteMaterialRequestDto>(command);
-        var material = await _context.Materials.FirstOrDefaultAsync(
+        var deleteMaterialRequestDto = Mapper.Map<DeleteMaterialRequestDto>(command);
+        var material = await Context.Materials.FirstOrDefaultAsync(
             u => u.Id == deleteMaterialRequestDto.Id, token);
 
         if (material is null)
@@ -33,8 +34,8 @@ public class DeleteMaterialCommandHandler : BaseHandler,
             return false;
         }
 
-        _context.Materials.Remove(material);
-        await _context.SaveChangesAsync(token);
+        Context.Materials.Remove(material);
+        await Context.SaveChangesAsync(token);
 
         return true;
     }

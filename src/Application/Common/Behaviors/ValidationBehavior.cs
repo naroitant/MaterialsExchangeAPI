@@ -1,4 +1,4 @@
-﻿namespace MaterialsExchangeAPI.Application.Common.Behaviors;
+﻿namespace Application.Common.Behaviors;
 
 public class ValidationBehavior<TRequest, TResponse> 
     : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
@@ -13,22 +13,24 @@ public class ValidationBehavior<TRequest, TResponse>
     public async Task<TResponse> Handle(TRequest request, 
         RequestHandlerDelegate<TResponse> next, CancellationToken token)
     {
-        if (_validators.Any())
+        if (!_validators.Any())
         {
-            var context = new ValidationContext<TRequest>(request);
+            return await next();
+        }
+        
+        var context = new ValidationContext<TRequest>(request);
 
-            var validationResults = await Task.WhenAll(
-                _validators.Select(v => v.ValidateAsync(context, token)));
+        var validationResults = await Task.WhenAll(
+            _validators.Select(v => v.ValidateAsync(context, token)));
 
-            var failures = validationResults
-                .Where(r => r.Errors.Any())
-                .SelectMany(r => r.Errors)
-                .ToList();
+        var failures = validationResults
+            .Where(r => r.Errors.Any())
+            .SelectMany(r => r.Errors)
+            .ToList();
 
-            if (failures.Any())
-            {
-                throw new ValidationException(failures);
-            }
+        if (failures.Any())
+        {
+            throw new ValidationException(failures);
         }
 
         return await next();

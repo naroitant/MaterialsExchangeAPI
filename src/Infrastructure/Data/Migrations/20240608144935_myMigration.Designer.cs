@@ -2,11 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
-using MaterialsExchangeAPI.Infrastructure.Data;
+using Infrastructure.Data;
 
 #nullable disable
 
-namespace MaterialsExchangeAPI.Migrations
+namespace Migrations
 {
     [DbContext(typeof(AppDbContext))]
     [Migration("20240608144935_myMigration")]
@@ -22,7 +22,7 @@ namespace MaterialsExchangeAPI.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("MaterialsExchangeAPI.Models.Domain.Material", b =>
+            modelBuilder.Entity("Models.Domain.Material", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -47,7 +47,7 @@ namespace MaterialsExchangeAPI.Migrations
                     b.ToTable("materials");
                 });
 
-            modelBuilder.Entity("MaterialsExchangeAPI.Models.Domain.Seller", b =>
+            modelBuilder.Entity("Models.Domain.Seller", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -64,9 +64,9 @@ namespace MaterialsExchangeAPI.Migrations
                     b.ToTable("sellers");
                 });
 
-            modelBuilder.Entity("MaterialsExchangeAPI.Models.Domain.Material", b =>
+            modelBuilder.Entity("Models.Domain.Material", b =>
                 {
-                    b.HasOne("MaterialsExchangeAPI.Models.Domain.Seller", "Seller")
+                    b.HasOne("Models.Domain.Seller", "Seller")
                         .WithMany("Materials")
                         .HasForeignKey("SellerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -75,7 +75,7 @@ namespace MaterialsExchangeAPI.Migrations
                     b.Navigation("Seller");
                 });
 
-            modelBuilder.Entity("MaterialsExchangeAPI.Models.Domain.Seller", b =>
+            modelBuilder.Entity("Models.Domain.Seller", b =>
                 {
                     b.Navigation("Materials");
                 });

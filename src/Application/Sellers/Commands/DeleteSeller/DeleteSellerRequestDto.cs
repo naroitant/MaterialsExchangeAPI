@@ -1,4 +1,4 @@
-﻿namespace MaterialsExchangeAPI.Application.Sellers.Commands.DeleteSeller;
+﻿namespace Application.Sellers.Commands.DeleteSeller;
 
 public record DeleteSellerRequestDto
 {

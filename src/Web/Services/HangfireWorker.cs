@@ -1,8 +1,8 @@
 ﻿using Hangfire;
-using MaterialsExchangeAPI.Application.Materials.Commands.UpdateMaterialPrices;
-using MaterialsExchangeAPI.Web.Endpoints;
+using Application.Materials.Commands.UpdateMaterialPrices;
+using Web.Endpoints;
 
-namespace MaterialsExchangeAPI.Infrastructure.Hangfire;
+namespace Web.Services;
 
 public static class HangfireWorker
 {
