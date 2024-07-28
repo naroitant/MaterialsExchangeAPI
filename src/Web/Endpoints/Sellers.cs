@@ -26,10 +26,10 @@ public class Sellers : BaseController
     public async Task<IActionResult> GetAll([FromQuery] PageParameters pageParameters)
     {
         var sellers = await Mediator.Send(new GetAllSellersQuery()
-        {
-            PageNumber = pageParameters.PageNumber,
-            PageSize = pageParameters.PageSize,
-        });
+            {
+                PageNumber = pageParameters.PageNumber,
+                PageSize = pageParameters.PageSize,
+            });
         
         if (sellers.Count == 0)
         {
@@ -51,8 +51,10 @@ public class Sellers : BaseController
     [ProducesResponseType(404)]
     public async Task<IActionResult> GetById(int id)
     {
-        var seller = await Mediator.Send(
-            new GetSellerByIdQuery() { Id = id });
+        var seller = await Mediator.Send(new GetSellerByIdQuery()
+            {
+                Id = id,
+            });
 
         if (seller is null)
         {
@@ -83,15 +85,21 @@ public class Sellers : BaseController
     [ProducesResponseType(400)]
     public async Task<IActionResult> Create(string name)
     {
-        var seller = await Mediator.Send(
-            new CreateSellerCommand() { Name = name });
+        var seller = await Mediator.Send(new CreateSellerCommand()
+            {
+                Name = name,
+            });
 
         if (seller is null)
         {
             return BadRequest(seller);
         }
 
-        return CreatedAtAction(nameof(Create), new { id = seller.Id }, seller);
+        return CreatedAtAction(nameof(Create), new
+            {
+                id = seller.Id,
+            },
+            seller);
     }
 
     /// <summary>
@@ -109,10 +117,11 @@ public class Sellers : BaseController
     [ProducesResponseType(404)]
     public async Task<IActionResult> Update(int id, string name)
     {
-        var seller = await Mediator.Send(new UpdateSellerCommand() { 
-            Id = id,
-            Name = name,
-        });
+        var seller = await Mediator.Send(new UpdateSellerCommand()
+            { 
+                Id = id,
+                Name = name,
+            });
         
         if (seller is null)
         {
@@ -134,7 +143,10 @@ public class Sellers : BaseController
     public async Task<IActionResult> Delete(int id)
     {
         var deletedSellerIsFound = await Mediator.Send(
-            new DeleteSellerCommand() { Id = id });
+            new DeleteSellerCommand()
+            {
+                Id = id,
+            });
 
         if (deletedSellerIsFound is false)
         {

@@ -30,7 +30,7 @@ public class Material : BaseEntity
         const int minValue = 1;
         const int maxValue = 100;
         Random rand = new();
-
+        
         Price = rand.Next(minValue, maxValue);
     }
 }

@@ -38,7 +38,6 @@ public class CreateMaterialCommandHandler : BaseHandler,
         var createMaterialRequestDto =
             Mapper.Map<CreateMaterialRequestDto>(command);
         var material = Mapper.Map<Material>(createMaterialRequestDto);
-
         Context.Materials.Add(material);
         await Context.SaveChangesAsync(token);
 

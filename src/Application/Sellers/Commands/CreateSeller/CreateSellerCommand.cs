@@ -28,7 +28,6 @@ public class CreateSellerCommandHandler : BaseHandler,
         var createSellerRequestDto =
             Mapper.Map<CreateSellerRequestDto>(command);
         var seller = Mapper.Map<Seller>(createSellerRequestDto);
-
         Context.Sellers.Add(seller);
         await Context.SaveChangesAsync(token);
 

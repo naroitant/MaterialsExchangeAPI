@@ -6,7 +6,7 @@ using Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ������������ ������� �� ������ ������.
+// Add services from the assemblies.
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddWebServices();
@@ -34,7 +34,8 @@ app.UseHttpsRedirection();
 app.UseMiddleware<LoggingMiddleware>();
 app.UseMiddleware<DbTransactionMiddleware>();
 
-app.UseExceptionHandler(applicationBuilder => applicationBuilder.Run(async context =>
+app.UseExceptionHandler(applicationBuilder =>
+    applicationBuilder.Run(async context =>
 {
     context.Response.StatusCode = 500;
     context.Response.ContentType = "text/plain";
