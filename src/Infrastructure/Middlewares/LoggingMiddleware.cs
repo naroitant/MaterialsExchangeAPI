@@ -17,7 +17,7 @@ public class LoggingMiddleware : IMiddleware
     {
         var request = context.Request;
 
-        // Фиксируем время отправки запроса.
+        // Fetch the request timestamp.
         var start = Stopwatch.GetTimestamp();
 
         if (context is null)
@@ -29,7 +29,7 @@ public class LoggingMiddleware : IMiddleware
         {
             await next(context);
 
-            // Вычисляем время на получение ответа на запрос.
+            // Calculate the response time.
             var elapsedMilliseconds =
                 GetElapsedMilliseconds(start, Stopwatch.GetTimestamp());
 

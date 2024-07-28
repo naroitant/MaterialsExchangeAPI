@@ -23,7 +23,10 @@ public class UpdateMaterialPricesCommandHandler
         var materials = await _context.Materials
             .ToListAsync(cancellationToken: token);
 
-        if (!materials.Any()) return false;
+        if (!materials.Any())
+        {
+            return false;
+        }
         
         foreach (var material in materials)
         {
@@ -32,8 +35,7 @@ public class UpdateMaterialPricesCommandHandler
         }
 
         await _context.SaveChangesAsync(token);
-
+        
         return true;
-
     }
 }

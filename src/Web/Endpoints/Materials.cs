@@ -53,7 +53,9 @@ public class Materials : BaseController
     public async Task<IActionResult> GetById(int id)
     {
         var material = await Mediator.Send(new GetMaterialByIdQuery()
-            { Id = id });
+            {
+                Id = id,
+            });
 
         if (material is null)
         {
@@ -91,18 +93,22 @@ public class Materials : BaseController
     public async Task<IActionResult> Create(string name, decimal price, 
         int sellerId)
     {
-        var material = await Mediator.Send(new CreateMaterialCommand() { 
-            Name = name, 
-            Price = price, 
-            SellerId = sellerId,
-        });
+        var material = await Mediator.Send(new CreateMaterialCommand()
+            { 
+                Name = name, 
+                Price = price, 
+                SellerId = sellerId,
+            });
 
         if (material is null)
         {
             return BadRequest(material);
         }
 
-        return CreatedAtAction(nameof(Create), new { id = material.Id }, 
+        return CreatedAtAction(nameof(Create), new
+            {
+                id = material.Id,
+            }, 
             material);
     }
 
@@ -125,12 +131,12 @@ public class Materials : BaseController
         int sellerId)
     {
         var material = await Mediator.Send(new UpdateMaterialCommand()
-        {
-            Id = id,
-            Name = name,
-            Price = price,
-            SellerId = sellerId,
-        });
+            {
+                Id = id,
+                Name = name,
+                Price = price,
+                SellerId = sellerId,
+            });
 
         if (material is null)
         {
@@ -152,7 +158,10 @@ public class Materials : BaseController
     public async Task<IActionResult> Delete(int id)
     {
         var deletedMaterialIsFound = await Mediator.Send(
-            new DeleteMaterialCommand() { Id = id });
+            new DeleteMaterialCommand()
+            {
+                Id = id,
+            });
 
         if (deletedMaterialIsFound is false)
         {

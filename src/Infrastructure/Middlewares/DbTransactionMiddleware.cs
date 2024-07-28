@@ -5,16 +5,17 @@ namespace Infrastructure.Middlewares;
 
 public class DbTransactionMiddleware : IMiddleware
 {
-    private readonly AppDbContext Context;
+    private readonly AppDbContext _context;
 
     public DbTransactionMiddleware(AppDbContext context)
     {
-        Context = context;
+        _context = context;
     }
 
     public async Task InvokeAsync(HttpContext httpContext, RequestDelegate next)
     {
-        await using var transaction = await Context.Database.BeginTransactionAsync();
+        await using var transaction =
+            await _context.Database.BeginTransactionAsync();
 
         if (httpContext.Request.Method.Equals("GET",
             StringComparison.CurrentCultureIgnoreCase))

@@ -13,7 +13,6 @@ public record DeleteMaterialCommand : IRequest<bool>
     /// Уникальный идентификатор материала
     /// </summary>
     public int Id { get; init; }
-
 }
 
 public class DeleteMaterialCommandHandler : BaseHandler,
@@ -36,7 +35,7 @@ public class DeleteMaterialCommandHandler : BaseHandler,
 
         Context.Materials.Remove(material);
         await Context.SaveChangesAsync(token);
-
+        
         return true;
     }
 }
