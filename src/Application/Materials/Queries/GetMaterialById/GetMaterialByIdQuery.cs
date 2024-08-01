@@ -12,7 +12,7 @@ public record GetMaterialByIdQuery : IRequest<GetMaterialResponseDto?>
     /// <summary>
     /// Уникальный идентификатор материала
     /// </summary>
-    public int Id { get; init; }
+    public Guid Id { get; init; }
 }
 
 public class GetMaterialByIdQueryHandler : BaseHandler,

@@ -12,7 +12,7 @@ public record GetSellerByIdQuery : IRequest<GetSellerResponseDto?>
     /// <summary>
     /// Уникальный идентификатор продавца
     /// </summary>
-    public int Id { get; init; }
+    public Guid Id { get; init; }
 }
 
 public class GetSellerByIdQueryHandler : BaseHandler,

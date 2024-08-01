@@ -12,7 +12,7 @@ public record DeleteMaterialCommand : IRequest<bool>
     /// <summary>
     /// Уникальный идентификатор материала
     /// </summary>
-    public int Id { get; init; }
+    public Guid Id { get; init; }
 }
 
 public class DeleteMaterialCommandHandler : BaseHandler,

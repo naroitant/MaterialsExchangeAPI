@@ -12,7 +12,7 @@ public record UpdateMaterialCommand : IRequest<UpdateMaterialResponseDto?>
     /// <summary>
     /// Уникальный идентификатор материала
     /// </summary>
-    public int Id { get; init; }
+    public Guid Id { get; init; }
 
 
     /// <summary>

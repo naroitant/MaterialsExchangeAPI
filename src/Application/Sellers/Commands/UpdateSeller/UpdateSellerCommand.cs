@@ -12,7 +12,7 @@ public record UpdateSellerCommand : IRequest<UpdateSellerResponseDto?>
     /// <summary>
     /// Уникальный идентификатор продавца
     /// </summary>
-    public int Id { get; init; }
+    public Guid Id { get; init; }
 
     /// <summary>
     /// Имя продавца

@@ -2,5 +2,5 @@
 
 public record DeleteSellerRequestDto
 {
-    public int Id { get; init; }
+    public Guid Id { get; init; }
 }

@@ -49,7 +49,7 @@ public class Sellers : BaseController
     [HttpGet("id")]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> GetById(int id)
+    public async Task<IActionResult> GetById(Guid id)
     {
         var seller = await Mediator.Send(new GetSellerByIdQuery()
             {
@@ -115,7 +115,7 @@ public class Sellers : BaseController
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> Update(int id, string name)
+    public async Task<IActionResult> Update(Guid id, string name)
     {
         var seller = await Mediator.Send(new UpdateSellerCommand()
             { 
@@ -140,7 +140,7 @@ public class Sellers : BaseController
     [HttpDelete("id")]
     [ProducesResponseType(204)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> Delete(Guid id)
     {
         var deletedSellerIsFound = await Mediator.Send(
             new DeleteSellerCommand()
