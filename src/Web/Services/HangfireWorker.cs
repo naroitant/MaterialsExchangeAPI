@@ -1,5 +1,5 @@
-﻿using Hangfire;
-using Application.Materials.Commands.UpdateMaterialPrices;
+﻿using Application.Materials.Commands.UpdateMaterialPrices;
+using Hangfire;
 using Web.Endpoints;
 
 namespace Web.Services;

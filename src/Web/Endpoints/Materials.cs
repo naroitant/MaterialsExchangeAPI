@@ -128,7 +128,7 @@ public class Materials : BaseController
     [ProducesResponseType(404)]
     [ProducesResponseType(500)]
     public async Task<IActionResult> Update(Guid id, string name,
-        decimal price, int sellerId)
+        decimal price, Guid sellerId)
     {
         var material = await Mediator.Send(new UpdateMaterialCommand()
             {

@@ -14,7 +14,6 @@ public record UpdateMaterialCommand : IRequest<UpdateMaterialResponseDto?>
     /// </summary>
     public Guid Id { get; init; }
 
-
     /// <summary>
     /// Название материала
     /// </summary>
@@ -28,7 +27,7 @@ public record UpdateMaterialCommand : IRequest<UpdateMaterialResponseDto?>
     /// <summary>
     /// Уникальный идентификатор продавца
     /// </summary>
-    public int SellerId { get; init; }
+    public Guid SellerId { get; init; }
 }
 
 public class UpdateMaterialCommandHandler : BaseHandler,

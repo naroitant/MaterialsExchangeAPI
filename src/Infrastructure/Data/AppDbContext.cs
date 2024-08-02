@@ -25,8 +25,5 @@ public class AppDbContext : DbContext, IAppDbContext
             .HasOne(e => e.Seller)
             .WithMany(e => e.Materials)
             .HasForeignKey(e => e.SellerId);
-
-        builder
-            .Entity<Seller>(e => e.HasKey(s => new { s.Id }));
     }
 }
