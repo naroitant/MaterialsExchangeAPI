@@ -2,5 +2,5 @@
 
 public record DeleteMaterialRequestDto
 {
-    public int Id { get; init; }
+    public required int Id { get; init; }
 }

@@ -4,7 +4,6 @@ using Application.Materials.Commands.UpdateMaterial;
 using Application.Materials.Commands.UpdateMaterialPrices;
 using Application.Materials.Queries.GetAllMaterials;
 using Application.Materials.Queries.GetMaterialById;
-using Infrastructure.Pagination;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Endpoints;
@@ -18,21 +17,22 @@ public class Materials : BaseController
     /// <summary>
     /// Получение всех материалов
     /// </summary>
+    /// <param name="dto">Данные о паджинации</param>
     /// <returns>Все материалы</returns>
     /// <response code="200">Возвращает все материалы</response>
     /// <response code="404">Материалов не найдено</response>
     [HttpGet]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> GetAll([FromQuery] PageParameters pageParameters)
+    public async Task<IActionResult> GetAllMaterials(
+        [FromQuery] GetAllMaterialsRequestDto dto)
     {
-        var materials = await Mediator.Send(new GetAllMaterialsQuery()
+        var materials = await Mediator.Send(new GetAllMaterialsQuery(dto)
         {
-            PageNumber = pageParameters.PageNumber,
-            PageSize = pageParameters.PageSize,
+            Dto = dto,
         });
 
-        if (materials.Count == 0)
+        if (materials.Dtos.Count == 0)
         {
             return NotFound("No material found.");
         }
@@ -43,19 +43,20 @@ public class Materials : BaseController
     /// <summary>
     /// Получение материала по id
     /// </summary>
-    /// <param name="id">Уникальный идентификатор материала</param>
+    /// <param name="dto">Данные о материале</param>
     /// <returns>Материал</returns>
     /// <response code="200">Возвращает материал</response>
     /// <response code="404">Материал не найден</response>
-    [HttpGet("id")]
+    [HttpGet("{id:int}")]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> GetById(int id)
+    public async Task<IActionResult> GetMaterialById(
+        [FromRoute] GetMaterialByIdRequestDto dto)
     {
-        var material = await Mediator.Send(new GetMaterialByIdQuery()
-            {
-                Id = id,
-            });
+        var material = await Mediator.Send(new GetMaterialByIdQuery(dto)
+        {
+            Dto = dto,
+        });
 
         if (material is null)
         {
@@ -79,9 +80,7 @@ public class Materials : BaseController
     ///     }
     ///
     /// </remarks>
-    /// <param name="name">Название материала</param>
-    /// <param name="price">Стоимость материала</param>
-    /// <param name="sellerId">Уникальный идентификатор продавца</param>
+    /// <param name="dto">Данные о материале</param>
     /// <returns>Новый материал</returns>
     /// <response code="201">Возвращает новый материал</response>
     /// <response code="400">Некорректно введены данные</response>
@@ -90,53 +89,51 @@ public class Materials : BaseController
     [ProducesResponseType(201)]
     [ProducesResponseType(400)]
     [ProducesResponseType(500)]
-    public async Task<IActionResult> Create(string name, decimal price, 
-        int sellerId)
+    public async Task<IActionResult> CreateMaterial(
+        CreateMaterialRequestDto dto)
     {
-        var material = await Mediator.Send(new CreateMaterialCommand()
-            { 
-                Name = name, 
-                Price = price, 
-                SellerId = sellerId,
-            });
+        var material = await Mediator.Send(new CreateMaterialCommand(dto)
+        {
+            Dto = dto,
+        });
 
         if (material is null)
         {
             return BadRequest(material);
         }
 
-        return CreatedAtAction(nameof(Create), new
+        return CreatedAtAction(
+            nameof(CreateMaterial), new
             {
-                id = material.Id,
-            }, 
+                Id = material.Id,
+            },
             material);
     }
 
     /// <summary>
     /// Обновление информации о материале
     /// </summary>
-    /// <param name="id"></param>
-    /// <param name="name">Название материала</param>
-    /// <param name="price">Стоимость материала</param>
-    /// <param name="sellerId">Уникальный идентификатор продавца</param>
+    /// <param name="id">Идентификатор материала</param>
+    /// <param name="dto">Данные о материале</param>
     /// <returns>Обновлённый материал</returns>
     /// <response code="200">Возвращает обновлённый материал</response>
     /// <response code="404">Материал не найден</response>
     /// <response code="500">Некорректно введены данные</response>
-    [HttpPatch("id")]
+    [HttpPatch("{id:int}")]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
     [ProducesResponseType(500)]
-    public async Task<IActionResult> Update(int id, string name, decimal price,
-        int sellerId)
+    public async Task<IActionResult> UpdateMaterial(
+        int id,
+        UpdateMaterialRequestDto dto)
     {
-        var material = await Mediator.Send(new UpdateMaterialCommand()
-            {
-                Id = id,
-                Name = name,
-                Price = price,
-                SellerId = sellerId,
-            });
+        var material = await Mediator.Send(new UpdateMaterialCommand(
+            id,
+            dto)
+        {
+            Id = id,
+            Dto = dto,
+        });
 
         if (material is null)
         {
@@ -149,18 +146,19 @@ public class Materials : BaseController
     /// <summary>
     /// Удаление материала
     /// </summary>
-    /// <param name="id">Уникальный идентификатор материала</param>
+    /// <param name="dto">Данные о материале</param>
     /// <response code="204">Материал успешно удалён</response>
     /// <response code="404">Материал не найден</response>
     [HttpDelete("id")]
     [ProducesResponseType(204)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> DeleteMaterial(
+        DeleteMaterialRequestDto dto)
     {
         var deletedMaterialIsFound = await Mediator.Send(
-            new DeleteMaterialCommand()
+            new DeleteMaterialCommand(dto)
             {
-                Id = id,
+                Dto = dto,
             });
 
         if (deletedMaterialIsFound is false)
@@ -180,7 +178,7 @@ public class Materials : BaseController
     [Route("all-prices")]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> UpdatePrices(
+    public async Task<IActionResult> UpdateMaterialPrices(
         UpdateMaterialPricesCommand command)
     {
         var updatedMaterialsAreFound = await Mediator.Send(command);

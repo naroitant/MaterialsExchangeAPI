@@ -5,7 +5,7 @@ public class CreateSellerCommandValidator
 {
     public CreateSellerCommandValidator()
     {
-        RuleFor(m => m.Name)
+        RuleFor(c => c.Dto.Name)
             .NotEmpty();
     }
 }

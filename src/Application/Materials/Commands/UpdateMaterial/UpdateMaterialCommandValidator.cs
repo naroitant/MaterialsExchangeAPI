@@ -5,14 +5,17 @@ public class UpdateMaterialCommandValidator
 {
     public UpdateMaterialCommandValidator()
     {
-        RuleFor(m => m.Id)
+        RuleFor(c => c.Id)
             .NotNull();
-        RuleFor(m => m.Name)
+
+        RuleFor(c => c.Dto.Name)
             .NotEmpty();
-        RuleFor(m => m.Price)
+
+        RuleFor(c => c.Dto.Price)
             .NotNull()
             .GreaterThan(0);
-        RuleFor(m => m.SellerId)
+
+        RuleFor(c => c.Dto.SellerId)
             .NotNull();
     }
 }

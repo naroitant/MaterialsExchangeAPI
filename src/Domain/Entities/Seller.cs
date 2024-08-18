@@ -7,6 +7,7 @@ namespace Domain.Entities;
 public class Seller : BaseEntity
 {
     public string Name { get; private set; }
+
     public List<Material> Materials { get; private set; } = new();
 
     public Seller(string name)
@@ -17,5 +18,10 @@ public class Seller : BaseEntity
     public void Update(string name)
     {
         Name = name;
+    }
+
+    public void UpdateMaterials(List<Material> materials)
+    {
+        Materials = materials;
     }
 }

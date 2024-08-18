@@ -1,5 +1,5 @@
-﻿using Hangfire;
-using Application.Materials.Commands.UpdateMaterialPrices;
+﻿using Application.Materials.Commands.UpdateMaterialPrices;
+using Hangfire;
 using Web.Endpoints;
 
 namespace Web.Services;
@@ -11,6 +11,6 @@ public static class HangfireWorker
         UpdateMaterialPricesCommand command = new();
         
         RecurringJob.AddOrUpdate<Materials>("UpdateMaterialPrices",
-            x => x.UpdatePrices(command), "0 8 * * *");
+            x => x.UpdateMaterialPrices(command), "0 8 * * *");
     }
 }

@@ -2,6 +2,8 @@
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -19,7 +21,7 @@ namespace Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Models.Domain.Material", b =>
+            modelBuilder.Entity("Domain.Entities.Material", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -44,7 +46,7 @@ namespace Migrations
                     b.ToTable("materials");
                 });
 
-            modelBuilder.Entity("Models.Domain.Seller", b =>
+            modelBuilder.Entity("Domain.Entities.Seller", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -61,9 +63,9 @@ namespace Migrations
                     b.ToTable("sellers");
                 });
 
-            modelBuilder.Entity("Models.Domain.Material", b =>
+            modelBuilder.Entity("Domain.Entities.Material", b =>
                 {
-                    b.HasOne("Models.Domain.Seller", "Seller")
+                    b.HasOne("Domain.Entities.Seller", "Seller")
                         .WithMany("Materials")
                         .HasForeignKey("SellerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -72,7 +74,7 @@ namespace Migrations
                     b.Navigation("Seller");
                 });
 
-            modelBuilder.Entity("Models.Domain.Seller", b =>
+            modelBuilder.Entity("Domain.Entities.Seller", b =>
                 {
                     b.Navigation("Materials");
                 });
