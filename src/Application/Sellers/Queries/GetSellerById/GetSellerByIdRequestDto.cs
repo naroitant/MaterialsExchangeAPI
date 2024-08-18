@@ -2,5 +2,5 @@
 
 public record GetSellerByIdRequestDto
 {
-    public Guid Id { get; init; }
+    public required int Id { get; init; }
 }

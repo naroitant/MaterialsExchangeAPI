@@ -1,11 +1,12 @@
-﻿using Hangfire;
-using Hangfire.PostgreSql;
+﻿using System.Reflection;
 using Application.Common.Behaviors;
 using Application.Common.Mappings;
+using Hangfire;
+using Hangfire.PostgreSql;
 using Microsoft.Extensions.Configuration;
-using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Microsoft.Extensions.DependencyInjection;
+namespace Application;
 
 public static class DependencyInjection
 {
@@ -23,7 +24,7 @@ public static class DependencyInjection
         });
         services.ConfigureSwaggerGen(options =>
         {
-            options.SwaggerDoc("v1", new OpenApi.Models.OpenApiInfo
+            options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
             {
                 Version = "v1",
                 Title = "MaterialsExchangeAPI",

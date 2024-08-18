@@ -2,5 +2,5 @@
 
 public record GetMaterialByIdRequestDto
 {
-    public Guid Id { get; init; }
+    public int Id { get; init; }
 }

@@ -5,7 +5,7 @@ public class DeleteSellerCommandValidator
 {
     public DeleteSellerCommandValidator()
     {
-        RuleFor(m => m.Id)
+        RuleFor(m => m.Dto.Id)
             .NotNull();
     }
 }

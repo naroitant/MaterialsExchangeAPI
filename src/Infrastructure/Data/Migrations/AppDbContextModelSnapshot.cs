@@ -21,24 +21,13 @@ namespace Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Domain.Common.BaseEntity", b =>
+            modelBuilder.Entity("Domain.Entities.Material", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.HasKey("Id");
-
-                    b.ToTable("BaseEntity");
-
-                    b.UseTptMappingStrategy();
-                });
-
-            modelBuilder.Entity("Domain.Entities.Material", b =>
-                {
-                    b.HasBaseType("Domain.Common.BaseEntity");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -50,6 +39,8 @@ namespace Migrations
                     b.Property<int>("SellerId")
                         .HasColumnType("integer");
 
+                    b.HasKey("Id");
+
                     b.HasIndex("SellerId");
 
                     b.ToTable("materials");
@@ -57,23 +48,23 @@ namespace Migrations
 
             modelBuilder.Entity("Domain.Entities.Seller", b =>
                 {
-                    b.HasBaseType("Domain.Common.BaseEntity");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.HasKey("Id");
 
                     b.ToTable("sellers");
                 });
 
             modelBuilder.Entity("Domain.Entities.Material", b =>
                 {
-                    b.HasOne("Domain.Common.BaseEntity", null)
-                        .WithOne()
-                        .HasForeignKey("Domain.Entities.Material", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Domain.Entities.Seller", "Seller")
                         .WithMany("Materials")
                         .HasForeignKey("SellerId")
@@ -81,15 +72,6 @@ namespace Migrations
                         .IsRequired();
 
                     b.Navigation("Seller");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Seller", b =>
-                {
-                    b.HasOne("Domain.Common.BaseEntity", null)
-                        .WithOne()
-                        .HasForeignKey("Domain.Entities.Seller", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.Entities.Seller", b =>

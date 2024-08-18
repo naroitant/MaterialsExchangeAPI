@@ -1,7 +1,10 @@
+using Application;
 using Hangfire;
+using Infrastructure;
 using Infrastructure.Middlewares;
 using Microsoft.AspNetCore.Diagnostics;
 using Serilog;
+using Web;
 using Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);

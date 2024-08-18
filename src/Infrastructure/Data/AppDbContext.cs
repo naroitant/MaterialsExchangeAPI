@@ -11,6 +11,7 @@ public class AppDbContext : DbContext, IAppDbContext
         : base(options) { }
 
     public DbSet<Material> Materials => Set<Material>();
+
     public DbSet<Seller> Sellers => Set<Seller>();
     
     protected override void OnModelCreating(ModelBuilder builder)

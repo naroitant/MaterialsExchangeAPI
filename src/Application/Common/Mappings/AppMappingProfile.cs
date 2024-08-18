@@ -8,6 +8,7 @@ using Application.Sellers.Commands.CreateSeller;
 using Application.Sellers.Commands.UpdateSeller;
 using Application.Sellers.Commands.DeleteSeller;
 using Application.Sellers.Queries;
+using Application.Sellers.Queries.GetAllSellers;
 using Application.Sellers.Queries.GetSellerById;
 using Domain.Entities;
 
@@ -34,5 +35,6 @@ public class AppMappingProfile : Profile
         CreateMap<Seller, CreateSellerResponseDto?>();
         CreateMap<Seller, UpdateSellerResponseDto>();
         CreateMap<Seller, GetSellerResponseDto>();
+        CreateMap<List<GetSellerResponseDto>, GetAllSellersResponseDto>();
     }
 }

@@ -3,14 +3,8 @@ using Application.Common.Interfaces;
 
 namespace Application.Common;
 
-public abstract class BaseHandler
+public abstract class BaseHandler(IAppDbContext context, IMapper mapper)
 {
-    protected readonly IAppDbContext Context;
-    protected readonly IMapper Mapper;
-
-    protected BaseHandler(IAppDbContext context, IMapper mapper)
-    {
-        Context = context;
-        Mapper = mapper;
-    }
+    protected readonly IAppDbContext Context = context;
+    protected readonly IMapper Mapper = mapper;
 }

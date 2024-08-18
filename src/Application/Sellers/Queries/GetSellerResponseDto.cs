@@ -1,7 +1,12 @@
-﻿namespace Application.Sellers.Queries;
+﻿using Application.Materials.Queries;
+
+namespace Application.Sellers.Queries;
 
 public record GetSellerResponseDto
 {
-    public Guid Id { get; init; }
-    public string Name { get; init; } = string.Empty;
+    public required int Id { get; init; }
+
+    public required string Name { get; init; }
+
+    public required List<GetMaterialResponseDto> Dtos { get; init; } = [];
 }

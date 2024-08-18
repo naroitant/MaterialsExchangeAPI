@@ -1,9 +1,9 @@
 ﻿using Application.Sellers.Commands.CreateSeller;
 using Application.Sellers.Commands.DeleteSeller;
+using Application.Sellers.Commands.UpdateMaterialsForSeller;
 using Application.Sellers.Commands.UpdateSeller;
 using Application.Sellers.Queries.GetAllSellers;
 using Application.Sellers.Queries.GetSellerById;
-using Infrastructure.Pagination;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Endpoints;
@@ -17,21 +17,22 @@ public class Sellers : BaseController
     /// <summary>
     /// Получение всех продавцов
     /// </summary>
+    /// <param name="dto">Данные о паджинации</param>
     /// <returns>Все продавцы</returns>
     /// <response code="200">Возвращает всех продавцов</response>
     /// <response code="404">Продавцов не найдено</response>
     [HttpGet]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> GetAll([FromQuery] PageParameters pageParameters)
+    public async Task<IActionResult> GetAllSellersAsync(
+        [FromQuery] GetAllSellersRequestDto dto)
     {
-        var sellers = await Mediator.Send(new GetAllSellersQuery()
-            {
-                PageNumber = pageParameters.PageNumber,
-                PageSize = pageParameters.PageSize,
-            });
+        var sellers = await Mediator.Send(new GetAllSellersQuery(dto)
+        {
+            Dto = dto,
+        });
         
-        if (sellers.Count == 0)
+        if (sellers.Dtos.Count == 0)
         {
             return NotFound("No seller found.");
         }
@@ -42,19 +43,20 @@ public class Sellers : BaseController
     /// <summary>
     /// Получение продавца по id
     /// </summary>
-    /// <param name="id">Уникальный идентификатор продавца</param>
+    /// <param name="dto">Данные о продавце</param>
     /// <returns>Продавец</returns>
     /// <response code="200">Возвращает продавца</response>
     /// <response code="404">Продавец не найден</response>
-    [HttpGet("id")]
+    [HttpGet("{id:int}")]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> GetById(Guid id)
+    public async Task<IActionResult> GetSellerByIdAsync(
+        [FromRoute] GetSellerByIdRequestDto dto)
     {
-        var seller = await Mediator.Send(new GetSellerByIdQuery()
-            {
-                Id = id,
-            });
+        var seller = await Mediator.Send(new GetSellerByIdQuery(dto)
+        {
+            Dto = dto,
+        });
 
         if (seller is null)
         {
@@ -76,26 +78,28 @@ public class Sellers : BaseController
     ///     }
     ///
     /// </remarks>
-    /// <param name="name">Имя продавца</param>
+    /// <param name="dto">Имя продавца</param>
     /// <returns>Новый продавец</returns>
     /// <response code="201">Возвращает нового продавца</response>
     /// <response code="400">Некорректно введены данные</response>
     [HttpPost]
     [ProducesResponseType(201)]
     [ProducesResponseType(400)]
-    public async Task<IActionResult> Create(string name)
+    public async Task<IActionResult> CreateSellerAsync(CreateSellerRequestDto dto)
     {
-        var seller = await Mediator.Send(new CreateSellerCommand()
-            {
-                Name = name,
-            });
+        var seller = await Mediator.Send(new CreateSellerCommand(dto)
+        {
+            Dto = dto,
+        });
 
         if (seller is null)
         {
             return BadRequest(seller);
         }
 
-        return CreatedAtAction(nameof(Create), new
+        return CreatedAtAction(
+            nameof(CreateSellerAsync),
+            new
             {
                 id = seller.Id,
             },
@@ -105,24 +109,57 @@ public class Sellers : BaseController
     /// <summary>
     /// Обновление информации о продавце
     /// </summary>
-    /// <param name="id">Уникальный идентификатор продавца</param>
-    /// <param name="name">Имя продавца</param>
+    /// <param name="id">Идентификатор продавца</param>
+    /// <param name="dto">Данные о продавце</param>
     /// <returns>Обновлённый продавец</returns>
     /// <response code="200">Возвращает обновлённого продавца</response>
     /// <response code="400">Некорректно введены данные</response>
     /// <response code="404">Продавец не найден</response>
-    [HttpPatch("id")]
+    [HttpPatch("{id:int}")]
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> Update(Guid id, string name)
+    public async Task<IActionResult> UpdateSellerAsync(
+        [FromRoute] int id,
+        [FromQuery] UpdateSellerRequestDto dto)
     {
-        var seller = await Mediator.Send(new UpdateSellerCommand()
-            { 
-                Id = id,
-                Name = name,
-            });
+        var seller = await Mediator.Send(new UpdateSellerCommand(
+            id,
+            dto)
+        {
+            Id = id,
+            Dto = dto,
+        });
         
+        if (seller is null)
+        {
+            return NotFound($"No seller found.");
+        }
+
+        return Ok(seller);
+    }
+
+    /// <summary>
+    /// Обновление информации о продавце
+    /// </summary>
+    /// <param name="id">Идентификатор продавца</param>
+    /// <param name="dto">Данные о материалах</param>
+    /// <returns>Обновлённый продавец</returns>
+    /// <response code="200">Возвращает обновлённого продавца</response>
+    /// <response code="400">Некорректно введены данные</response>
+    /// <response code="404">Продавец не найден</response>
+    [HttpPatch("{id:int}/materials")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(404)]
+    public async Task<IActionResult> UpdateMaterialsAsync(
+        [FromRoute] int id,
+        [FromBody] UpdateMaterialsForSellerRequestDto dto)
+    {
+        var seller = await Mediator.Send(new UpdateMaterialsForSellerCommand(
+            id,
+            dto));
+
         if (seller is null)
         {
             return NotFound($"No seller found.");
@@ -134,19 +171,16 @@ public class Sellers : BaseController
     /// <summary>
     /// Удаление продавца
     /// </summary>
-    /// <param name="id">Уникальный идентификатор продавца</param>
+    /// <param name="dto">Данные о продавце</param>
     /// <response code="204">Продавец успешно удалён</response>
     /// <response code="404">Продавец не найден</response>
     [HttpDelete("id")]
     [ProducesResponseType(204)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> Delete(Guid id)
+    public async Task<IActionResult> DeleteSellerAsync(DeleteSellerRequestDto dto)
     {
         var deletedSellerIsFound = await Mediator.Send(
-            new DeleteSellerCommand()
-            {
-                Id = id,
-            });
+            new DeleteSellerCommand(dto));
 
         if (deletedSellerIsFound is false)
         {

@@ -1,12 +1,14 @@
 ﻿namespace Application.Sellers.Commands.UpdateSeller;
 
-public class DeleteSellerCommandValidator : AbstractValidator<UpdateSellerCommand>
+public class UpdateSellerCommandValidator
+    : AbstractValidator<UpdateSellerCommand>
 {
-    public DeleteSellerCommandValidator()
+    public UpdateSellerCommandValidator()
     {
         RuleFor(m => m.Id)
             .NotNull();
-        RuleFor(m => m.Name)
+
+        RuleFor(m => m.Dto.Name)
             .NotEmpty();
     }
 }
