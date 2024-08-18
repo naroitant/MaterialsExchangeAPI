@@ -24,7 +24,7 @@ public class Sellers : BaseController
     [HttpGet]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> GetAllSellersAsync(
+    public async Task<IActionResult> GetAllSellers(
         [FromQuery] GetAllSellersRequestDto dto)
     {
         var sellers = await Mediator.Send(new GetAllSellersQuery(dto)
@@ -43,19 +43,19 @@ public class Sellers : BaseController
     /// <summary>
     /// Получение продавца по id
     /// </summary>
-    /// <param name="dto">Данные о продавце</param>
+    /// <param name="id">Идентификатор продавца</param>
     /// <returns>Продавец</returns>
     /// <response code="200">Возвращает продавца</response>
     /// <response code="404">Продавец не найден</response>
     [HttpGet("{id:int}")]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> GetSellerByIdAsync(
-        [FromRoute] GetSellerByIdRequestDto dto)
+    public async Task<IActionResult> GetSellerById(
+        [FromRoute] int id)
     {
-        var seller = await Mediator.Send(new GetSellerByIdQuery(dto)
+        var seller = await Mediator.Send(new GetSellerByIdQuery(id)
         {
-            Dto = dto,
+            Id = id,
         });
 
         if (seller is null)
@@ -85,7 +85,7 @@ public class Sellers : BaseController
     [HttpPost]
     [ProducesResponseType(201)]
     [ProducesResponseType(400)]
-    public async Task<IActionResult> CreateSellerAsync(CreateSellerRequestDto dto)
+    public async Task<IActionResult> CreateSeller(CreateSellerRequestDto dto)
     {
         var seller = await Mediator.Send(new CreateSellerCommand(dto)
         {
@@ -98,7 +98,7 @@ public class Sellers : BaseController
         }
 
         return CreatedAtAction(
-            nameof(CreateSellerAsync),
+            nameof(CreateSeller),
             new
             {
                 id = seller.Id,
@@ -119,7 +119,7 @@ public class Sellers : BaseController
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> UpdateSellerAsync(
+    public async Task<IActionResult> UpdateSeller(
         [FromRoute] int id,
         [FromQuery] UpdateSellerRequestDto dto)
     {
@@ -140,7 +140,7 @@ public class Sellers : BaseController
     }
 
     /// <summary>
-    /// Обновление информации о продавце
+    /// Обновление списка материалов продавца
     /// </summary>
     /// <param name="id">Идентификатор продавца</param>
     /// <param name="dto">Данные о материалах</param>
@@ -152,7 +152,7 @@ public class Sellers : BaseController
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> UpdateMaterialsAsync(
+    public async Task<IActionResult> UpdateMaterials(
         [FromRoute] int id,
         [FromBody] UpdateMaterialsForSellerRequestDto dto)
     {
@@ -171,16 +171,17 @@ public class Sellers : BaseController
     /// <summary>
     /// Удаление продавца
     /// </summary>
-    /// <param name="dto">Данные о продавце</param>
+    /// <param name="id">Идентификатор продавца</param>
     /// <response code="204">Продавец успешно удалён</response>
     /// <response code="404">Продавец не найден</response>
-    [HttpDelete("id")]
+    [HttpDelete("{id:int}")]
     [ProducesResponseType(204)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> DeleteSellerAsync(DeleteSellerRequestDto dto)
+    public async Task<IActionResult> DeleteSeller(
+        [FromRoute] int id)
     {
         var deletedSellerIsFound = await Mediator.Send(
-            new DeleteSellerCommand(dto));
+            new DeleteSellerCommand(id));
 
         if (deletedSellerIsFound is false)
         {

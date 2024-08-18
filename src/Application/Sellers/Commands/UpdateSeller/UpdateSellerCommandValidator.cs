@@ -5,10 +5,10 @@ public class UpdateSellerCommandValidator
 {
     public UpdateSellerCommandValidator()
     {
-        RuleFor(m => m.Id)
+        RuleFor(c => c.Id)
             .NotNull();
 
-        RuleFor(m => m.Dto.Name)
+        RuleFor(c => c.Dto.Name)
             .NotEmpty();
     }
 }

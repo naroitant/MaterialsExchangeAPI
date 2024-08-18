@@ -11,22 +11,21 @@ public class UpdateSellerCommandHandler(IAppDbContext context, IMapper mapper)
     public async Task<UpdateSellerResponseDto?> Handle(
         UpdateSellerCommand command, CancellationToken token)
     {
-        var updateSellerRequestDto =
-            Mapper.Map<UpdateSellerRequestDto>(command);
-        var seller = await Context.Sellers.FirstOrDefaultAsync(
-            u => u.Id == updateSellerRequestDto.Id, token);
+        var requestDto = command.Dto;
+
+        var seller = await Context.Sellers
+            .FirstOrDefaultAsync(u => u.Id == command.Id, token);
 
         if (seller is null)
         {
             return null;
         }
 
-        seller.Update(updateSellerRequestDto.Name);
+        seller.Update(requestDto.Name);
 
         await Context.SaveChangesAsync(token);
 
-        var updateSellerResponseDto =
-            Mapper.Map<UpdateSellerResponseDto>(seller);
-        return updateSellerResponseDto;
+        var responseDto = Mapper.Map<UpdateSellerResponseDto>(seller);
+        return responseDto;
     }
 }

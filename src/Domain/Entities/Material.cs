@@ -10,7 +10,7 @@ public class Material : BaseEntity
 
     public decimal Price { get; private set; }
 
-    public Seller? Seller { get; private set; }
+    public Seller? Seller { get; set; }
 
     public int SellerId { get; private set; }
 

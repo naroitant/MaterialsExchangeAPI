@@ -14,16 +14,15 @@ public class CreateSellerCommandHandler(
     public async Task<CreateSellerResponseDto?> Handle(
         CreateSellerCommand command, CancellationToken token)
     {
-        var createSellerRequestDto =
-            Mapper.Map<CreateSellerRequestDto>(command);
-        var seller = Mapper.Map<Seller>(createSellerRequestDto);
+        var requestDto = Mapper.Map<CreateSellerRequestDto>(command);
+
+        var seller = Mapper.Map<Seller>(requestDto);
 
         Context.Sellers.Add(seller);
 
         await Context.SaveChangesAsync(token);
 
-        var createSellerResponseDto =
-            Mapper.Map<CreateSellerResponseDto?>(seller);
-        return createSellerResponseDto;
+        var responseDto = Mapper.Map<CreateSellerResponseDto?>(seller);
+        return responseDto;
     }
 }

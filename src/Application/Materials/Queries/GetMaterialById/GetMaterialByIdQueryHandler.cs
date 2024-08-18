@@ -11,20 +11,19 @@ public class GetMaterialByIdQueryHandler(IAppDbContext context, IMapper mapper)
     public async Task<GetMaterialResponseDto?> Handle(
         GetMaterialByIdQuery request, CancellationToken token)
     {
-        var getMaterialByIdRequestDto =
-            Mapper.Map<GetMaterialByIdRequestDto>(request);
+        var requestDto = request.Dto;
+
         var material = await Context.Materials
             .AsNoTracking()
             .FirstOrDefaultAsync(u =>
-                u.Id == getMaterialByIdRequestDto.Id, token);
+                u.Id == requestDto.Id, token);
 
         if (material is null)
         {
             return null;
         }
 
-        var getMaterialResponseDto =
-            Mapper.Map<GetMaterialResponseDto>(material);
-        return getMaterialResponseDto;
+        var responseDto = Mapper.Map<GetMaterialResponseDto>(material);
+        return responseDto;
     }
 }

@@ -11,6 +11,6 @@ public static class HangfireWorker
         UpdateMaterialPricesCommand command = new();
         
         RecurringJob.AddOrUpdate<Materials>("UpdateMaterialPrices",
-            x => x.UpdateMaterialPricesAsync(command), "0 8 * * *");
+            x => x.UpdateMaterialPrices(command), "0 8 * * *");
     }
 }

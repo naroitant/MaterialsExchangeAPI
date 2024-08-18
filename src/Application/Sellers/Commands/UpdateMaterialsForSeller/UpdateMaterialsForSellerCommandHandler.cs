@@ -5,7 +5,7 @@ using AutoMapper;
 
 namespace Application.Sellers.Commands.UpdateMaterialsForSeller;
 
-public class UpdateSellerCommandHandler(
+public class UpdateMaterialsForSellerCommandHandler(
     IAppDbContext context,
     IMapper mapper)
     : BaseHandler(context, mapper),
@@ -30,20 +30,21 @@ public class UpdateSellerCommandHandler(
 
         await Context.SaveChangesAsync(token);
 
-        var updateMaterialsForSellerResponseDto = new UpdateMaterialsForSellerResponseDto
-        {
-            Id = seller.Id,
-            Dtos = await Context.Materials
-                .Where(m => materialIds.Contains(m.Id))
-                .Select(m => new GetMaterialResponseDto
-                {
-                    Id = m.Id,
-                    Name = m.Name,
-                    Price = m.Price,
-                    SellerId = m.SellerId
-                })
-                .ToListAsync(token)
-        };
+        var updateMaterialsForSellerResponseDto =
+            new UpdateMaterialsForSellerResponseDto
+            {
+                Id = seller.Id,
+                Dtos = await Context.Materials
+                    .Where(m => materialIds.Contains(m.Id))
+                    .Select(m => new GetMaterialResponseDto
+                    {
+                        Id = m.Id,
+                        Name = m.Name,
+                        Price = m.Price,
+                        SellerId = m.SellerId
+                    })
+                    .ToListAsync(token)
+            };
 
         return updateMaterialsForSellerResponseDto;
     }

@@ -13,10 +13,10 @@ public class DeleteSellerCommandHandler(
     public async Task<bool> Handle(
         DeleteSellerCommand command, CancellationToken token)
     {
-        var deleteSellerRequestDto =
-            Mapper.Map<DeleteSellerRequestDto>(command);
-        var seller = await Context.Sellers.FirstOrDefaultAsync(
-            u => u.Id == deleteSellerRequestDto.Id, token);
+        var requestDto = Mapper.Map<DeleteSellerRequestDto>(command);
+
+        var seller = await Context.Sellers
+            .FirstOrDefaultAsync(u => u.Id == requestDto.Id, token);
 
         if (seller is null)
         {
@@ -24,6 +24,7 @@ public class DeleteSellerCommandHandler(
         }
 
         Context.Sellers.Remove(seller);
+
         await Context.SaveChangesAsync(token);
 
         return true;

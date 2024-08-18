@@ -1,5 +1,6 @@
 ﻿using Application.Common;
 using Application.Common.Interfaces;
+using Application.Materials.Queries;
 using AutoMapper;
 
 namespace Application.Sellers.Queries.GetAllSellers;
@@ -16,7 +17,21 @@ public class GetAllSellersQueryHandler(IAppDbContext context, IMapper mapper)
         var responseDtos = await Context.Sellers
             .AsNoTracking()
             .OrderBy(s => s.Id)
-            .Select(s => Mapper.Map<GetSellerResponseDto>(s))
+            .Include(s => s.Materials)
+            .Select(s => new GetSellerResponseDto
+            {
+                Id = s.Id,
+                Name = s.Name,
+                Dtos = s.Materials
+                    .Select(m => new GetMaterialResponseDto
+                    {
+                        Id = m.Id,
+                        Name = m.Name,
+                        Price = m.Price,
+                        SellerId = m.SellerId,
+                    })
+                    .ToList(),
+            })
             .Skip(requestDto.Skip)
             .Take(requestDto.Take)
             .ToListAsync(cancellationToken: token);

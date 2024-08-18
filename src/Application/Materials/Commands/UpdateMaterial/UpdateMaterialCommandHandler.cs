@@ -11,10 +11,10 @@ public class UpdateMaterialCommandHandler(IAppDbContext context, IMapper mapper)
     public async Task<UpdateMaterialResponseDto?> Handle(
         UpdateMaterialCommand command, CancellationToken token)
     {
-        var updateMaterialRequestDto =
-            Mapper.Map<UpdateMaterialRequestDto>(command);
-        var material = await Context.Materials.FirstOrDefaultAsync(
-            u => u.Id == command.Id, token);
+        var requestDto = command.Dto;
+
+        var material = await Context.Materials
+            .FirstOrDefaultAsync(u => u.Id == command.Id, token);
 
         if (material is null)
         {
@@ -22,14 +22,13 @@ public class UpdateMaterialCommandHandler(IAppDbContext context, IMapper mapper)
         }
 
         material.Update(
-            updateMaterialRequestDto.Name,
-            updateMaterialRequestDto.Price
+            requestDto.Name,
+            requestDto.Price
         );
 
         await Context.SaveChangesAsync(token);
 
-        var updateMaterialResponseDto =
-            Mapper.Map<UpdateMaterialResponseDto>(material);
-        return updateMaterialResponseDto;
+        var responseDto = Mapper.Map<UpdateMaterialResponseDto>(material);
+        return responseDto;
     }
 }

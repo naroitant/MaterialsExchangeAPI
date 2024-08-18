@@ -24,7 +24,7 @@ public class Materials : BaseController
     [HttpGet]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> GetAllMaterialsAsync(
+    public async Task<IActionResult> GetAllMaterials(
         [FromQuery] GetAllMaterialsRequestDto dto)
     {
         var materials = await Mediator.Send(new GetAllMaterialsQuery(dto)
@@ -50,7 +50,7 @@ public class Materials : BaseController
     [HttpGet("{id:int}")]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> GetMaterialByIdAsync(
+    public async Task<IActionResult> GetMaterialById(
         [FromRoute] GetMaterialByIdRequestDto dto)
     {
         var material = await Mediator.Send(new GetMaterialByIdQuery(dto)
@@ -89,7 +89,7 @@ public class Materials : BaseController
     [ProducesResponseType(201)]
     [ProducesResponseType(400)]
     [ProducesResponseType(500)]
-    public async Task<IActionResult> CreateMaterialAsync(
+    public async Task<IActionResult> CreateMaterial(
         CreateMaterialRequestDto dto)
     {
         var material = await Mediator.Send(new CreateMaterialCommand(dto)
@@ -102,11 +102,12 @@ public class Materials : BaseController
             return BadRequest(material);
         }
 
-        return CreatedAtAction(nameof(CreateMaterialAsync), new
-        {
-            id = material.Id,
-        },
-        material);
+        return CreatedAtAction(
+            nameof(CreateMaterial), new
+            {
+                Id = material.Id,
+            },
+            material);
     }
 
     /// <summary>
@@ -122,7 +123,7 @@ public class Materials : BaseController
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
     [ProducesResponseType(500)]
-    public async Task<IActionResult> UpdateMaterialAsync(
+    public async Task<IActionResult> UpdateMaterial(
         int id,
         UpdateMaterialRequestDto dto)
     {
@@ -151,7 +152,7 @@ public class Materials : BaseController
     [HttpDelete("id")]
     [ProducesResponseType(204)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> DeleteMaterialAsync(
+    public async Task<IActionResult> DeleteMaterial(
         DeleteMaterialRequestDto dto)
     {
         var deletedMaterialIsFound = await Mediator.Send(
@@ -177,7 +178,7 @@ public class Materials : BaseController
     [Route("all-prices")]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> UpdateMaterialPricesAsync(
+    public async Task<IActionResult> UpdateMaterialPrices(
         UpdateMaterialPricesCommand command)
     {
         var updatedMaterialsAreFound = await Mediator.Send(command);

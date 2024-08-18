@@ -11,10 +11,10 @@ public class DeleteMaterialCommandHandler(IAppDbContext context, IMapper mapper)
     public async Task<bool> Handle(
         DeleteMaterialCommand command, CancellationToken token)
     {
-        var deleteMaterialRequestDto =
-            Mapper.Map<DeleteMaterialRequestDto>(command);
-        var material = await Context.Materials.FirstOrDefaultAsync(
-            u => u.Id == deleteMaterialRequestDto.Id, token);
+        var requestDto = Mapper.Map<DeleteMaterialRequestDto>(command);
+
+        var material = await Context.Materials
+            .FirstOrDefaultAsync(u => u.Id == requestDto.Id, token);
 
         if (material is null)
         {

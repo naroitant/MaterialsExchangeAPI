@@ -12,9 +12,9 @@ public class CreateMaterialCommandHandler(IAppDbContext context, IMapper mapper)
     public async Task<CreateMaterialResponseDto?> Handle(
         CreateMaterialCommand command, CancellationToken token)
     {
-        var createMaterialRequestDto =
-            Mapper.Map<CreateMaterialRequestDto>(command);
-        var material = Mapper.Map<Material>(createMaterialRequestDto);
+        var requestDto = command.Dto;
+
+        var material = Mapper.Map<Material>(requestDto);
 
         Context.Materials.Add(material);
 

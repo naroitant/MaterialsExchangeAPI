@@ -12,36 +12,28 @@ public class GetSellerByIdQueryHandler(IAppDbContext context, IMapper mapper)
     public async Task<GetSellerResponseDto?> Handle(GetSellerByIdQuery request,
         CancellationToken token)
     {
-        var getSellerByIdRequestDto =
-            Mapper.Map<GetSellerByIdRequestDto>(request);
-        var seller = await Context.Sellers
+        var requestDto = Mapper.Map<GetSellerByIdRequestDto>(request);
+
+        var responseDto = await Context.Sellers
             .AsNoTracking()
-            .FirstOrDefaultAsync(u =>
-                u.Id == getSellerByIdRequestDto.Id, token);
-
-        if (seller is null)
-        {
-            return null;
-        }
-
-        var getMaterialResponseDtos = await Context.Materials
-            .Where(m => m.SellerId == seller.Id)
-            .Select(m => new GetMaterialResponseDto
+            .Include(s => s.Materials)
+            .Select(s => new GetSellerResponseDto
             {
-                Id = m.Id,
-                Name = m.Name,
-                Price = m.Price,
-                SellerId = m.SellerId,
+                Id = s.Id,
+                Name = s.Name,
+                Dtos = s.Materials
+                    .Select(m => new GetMaterialResponseDto
+                    {
+                        Id = m.Id,
+                        Name = m.Name,
+                        Price = m.Price,
+                        SellerId = m.SellerId,
+                    })
+                    .ToList(),
             })
-            .ToListAsync(token);
+            .FirstOrDefaultAsync(s =>
+                s.Id == requestDto.Id, token);
 
-        var getSellerResponseDto = new GetSellerResponseDto
-        {
-            Id = seller.Id,
-            Name = seller.Name,
-            Dtos = getMaterialResponseDtos,
-        };
-
-        return getSellerResponseDto;
+        return responseDto ?? null;
     }
 }

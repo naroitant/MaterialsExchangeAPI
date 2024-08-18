@@ -3,8 +3,8 @@
 /// <summary>
 /// Запрос на получение продавца по id
 /// </summary>
-public record GetSellerByIdQuery(GetSellerByIdRequestDto dto)
+public record GetSellerByIdQuery(int id)
     : IRequest<GetSellerResponseDto?>
 {
-    public required GetSellerByIdRequestDto Dto { get; init; } = dto;
+    public required int Id { get; init; } = id;
 }

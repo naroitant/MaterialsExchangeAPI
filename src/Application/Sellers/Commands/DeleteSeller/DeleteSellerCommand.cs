@@ -1,6 +1,6 @@
 ﻿namespace Application.Sellers.Commands.DeleteSeller;
 
-public record DeleteSellerCommand(DeleteSellerRequestDto dto) : IRequest<bool>
+public record DeleteSellerCommand(int id) : IRequest<bool>
 {
-    public DeleteSellerRequestDto Dto { get; init; } = dto;
+    public int Id { get; init; } = id;
 }

@@ -5,14 +5,14 @@ public class CreateMaterialCommandValidator
 {
     public CreateMaterialCommandValidator()
     {
-        RuleFor(m => m.Dto.Name)
+        RuleFor(c => c.Dto.Name)
             .NotEmpty();
 
-        RuleFor(m => m.Dto.Price)
+        RuleFor(c => c.Dto.Price)
             .NotNull()
             .GreaterThan(0);
 
-        RuleFor(m => m.Dto.SellerId)
+        RuleFor(c => c.Dto.SellerId)
             .NotNull();
     }
 }
