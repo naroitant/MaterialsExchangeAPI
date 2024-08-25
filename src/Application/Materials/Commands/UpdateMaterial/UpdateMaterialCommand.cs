@@ -9,6 +9,5 @@ public record UpdateMaterialCommand(
     : IRequest<UpdateMaterialResponseDto?>
 {
     public required int Id { get; init; } = id;
-
     public required UpdateMaterialRequestDto Dto { get; init; } = dto;
 }

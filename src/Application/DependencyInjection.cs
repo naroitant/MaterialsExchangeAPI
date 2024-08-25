@@ -5,13 +5,15 @@ using Hangfire;
 using Hangfire.PostgreSql;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
 
 namespace Application;
 
 public static class DependencyInjection
 {
     public static IServiceCollection AddApplicationServices(
-        this IServiceCollection services, IConfiguration configuration)
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
         services.AddAutoMapper(typeof(AppMappingProfile));
 
@@ -24,7 +26,7 @@ public static class DependencyInjection
         });
         services.ConfigureSwaggerGen(options =>
         {
-            options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+            options.SwaggerDoc("v1", new OpenApiInfo
             {
                 Version = "v1",
                 Title = "MaterialsExchangeAPI",

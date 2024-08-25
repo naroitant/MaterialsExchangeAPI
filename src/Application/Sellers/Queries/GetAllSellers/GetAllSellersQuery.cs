@@ -4,7 +4,7 @@
 /// Запрос на получение всех продавцов
 /// </summary>
 public record GetAllSellersQuery(GetAllSellersRequestDto dto)
-    : IRequest<GetAllSellersResponseDto>
+    : IRequest<GetSellersResponseDto>
 {
     public required GetAllSellersRequestDto Dto { get; init; } = dto;
 }

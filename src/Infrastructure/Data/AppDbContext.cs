@@ -5,11 +5,9 @@ using System.Reflection;
 
 namespace Infrastructure.Data;
 
-public class AppDbContext : DbContext, IAppDbContext
+public class AppDbContext(DbContextOptions<AppDbContext> options)
+    : DbContext(options), IAppDbContext
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options)
-        : base(options) { }
-
     public DbSet<Material> Materials => Set<Material>();
 
     public DbSet<Seller> Sellers => Set<Seller>();

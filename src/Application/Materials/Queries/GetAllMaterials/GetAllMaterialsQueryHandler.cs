@@ -19,7 +19,7 @@ public class GetAllMaterialsQueryHandler(IAppDbContext context, IMapper mapper)
             .Select(m => Mapper.Map<GetMaterialResponseDto>(m))
             .Skip(requestDto.Skip)
             .Take(requestDto.Take)
-            .ToListAsync(cancellationToken: token);
+            .ToListAsync(token);
 
         var responseDto = new GetAllMaterialsResponseDto
         {

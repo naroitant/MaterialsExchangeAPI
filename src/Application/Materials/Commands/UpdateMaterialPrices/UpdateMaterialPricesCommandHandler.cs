@@ -9,9 +9,9 @@ public class UpdateMaterialPricesCommandHandler(IAppDbContext context)
         UpdateMaterialPricesCommand command, CancellationToken token)
     {
         var materials = await context.Materials
-            .ToListAsync(cancellationToken: token);
+            .ToListAsync(token);
 
-        if (!materials.Any())
+        if (materials.Count == 0)
         {
             return false;
         }

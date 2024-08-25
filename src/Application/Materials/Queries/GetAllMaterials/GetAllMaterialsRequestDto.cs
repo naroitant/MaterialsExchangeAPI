@@ -3,6 +3,5 @@
 public record GetAllMaterialsRequestDto
 {
     public int Skip { get; init; }
-
     public int Take { get; init; }
 }

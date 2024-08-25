@@ -35,6 +35,6 @@ public class AppMappingProfile : Profile
         CreateMap<Seller, CreateSellerResponseDto?>();
         CreateMap<Seller, UpdateSellerResponseDto>();
         CreateMap<Seller, GetSellerResponseDto>();
-        CreateMap<List<GetSellerResponseDto>, GetAllSellersResponseDto>();
+        CreateMap<List<GetSellerResponseDto>, GetSellersResponseDto>();
     }
 }
