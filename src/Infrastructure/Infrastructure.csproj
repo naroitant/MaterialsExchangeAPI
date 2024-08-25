@@ -21,4 +21,9 @@
     <ProjectReference Include="..\Application\Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Data\Migrations\20240821194043_AddsRequestLogs.cs" />
+    <Compile Remove="Data\Migrations\20240821194043_AddsRequestLogs.Designer.cs" />
+  </ItemGroup>
+
 </Project>

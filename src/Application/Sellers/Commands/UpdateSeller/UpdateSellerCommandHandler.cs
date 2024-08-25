@@ -4,7 +4,9 @@ using AutoMapper;
 
 namespace Application.Sellers.Commands.UpdateSeller;
 
-public class UpdateSellerCommandHandler(IAppDbContext context, IMapper mapper)
+public class UpdateSellerCommandHandler(
+    IAppDbContext context,
+    IMapper mapper)
     : BaseHandler(context, mapper),
         IRequestHandler<UpdateSellerCommand, UpdateSellerResponseDto?>
 {

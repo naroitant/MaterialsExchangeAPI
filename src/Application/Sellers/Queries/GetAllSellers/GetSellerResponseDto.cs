@@ -1,6 +1,4 @@
-﻿using Application.Materials.Queries;
-
-namespace Application.Sellers.Queries.GetAllSellers;
+﻿namespace Application.Sellers.Queries.GetAllSellers;
 
 public record GetAllSellersResponseDto
 {

@@ -1,6 +1,4 @@
-﻿using Application.Materials.Commands.UpdateMaterial;
-
-namespace Application.Sellers.Commands.UpdateSeller;
+﻿namespace Application.Sellers.Commands.UpdateSeller;
 
 /// <summary>
 /// Команда обновления продавца

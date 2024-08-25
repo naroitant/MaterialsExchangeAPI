@@ -5,6 +5,7 @@ public class DeleteMaterialCommandValidator
 {
     public DeleteMaterialCommandValidator()
     {
-        RuleFor(c => c.Dto.Id).NotNull();
+        RuleFor(c => c.Dto.Id)
+            .NotNull();
     }
 }
