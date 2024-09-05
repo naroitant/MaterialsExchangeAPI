@@ -15,8 +15,8 @@ public class GetMaterialByIdQueryHandler(IAppDbContext context, IMapper mapper)
 
         var material = await Context.Materials
             .AsNoTracking()
-            .FirstOrDefaultAsync(u =>
-                u.Id == requestDto.Id, token);
+            .FirstOrDefaultAsync(m =>
+                m.Id == requestDto.Id, token);
 
         if (material is null)
         {
