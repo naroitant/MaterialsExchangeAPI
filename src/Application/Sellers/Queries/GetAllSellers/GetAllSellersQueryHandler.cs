@@ -21,6 +21,15 @@ public class GetAllSellersQueryHandler(IAppDbContext context, IMapper mapper)
             {
                 Id = s.Id,
                 Name = s.Name,
+                Dtos = s.Materials
+                    .Select(m => new GetMaterialResponseDto
+                    {
+                        Id = m.Id,
+                        Name = m.Name,
+                        Price = m.Price,
+                        SellerId = m.SellerId
+                    })
+                    .ToList(),
             })
             .Skip(requestDto.Skip)
             .Take(requestDto.Take)
