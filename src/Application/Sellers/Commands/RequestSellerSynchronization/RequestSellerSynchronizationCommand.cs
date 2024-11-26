@@ -1,0 +1,3 @@
+﻿namespace Application.Sellers.Commands.RequestSellerSynchronization;
+
+public record RequestSellerSynchronizationCommand : IRequest;

@@ -2,6 +2,7 @@
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using MassTransit;
 
 namespace Infrastructure.Data;
 
@@ -14,8 +15,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        base.OnModelCreating(builder);
-
         builder.ApplyConfigurationsFromAssembly(
             Assembly.GetExecutingAssembly());
 
@@ -24,5 +23,11 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
             .HasOne(e => e.Seller)
             .WithMany(e => e.Materials)
             .HasForeignKey(e => e.SellerId);
+        
+        base.OnModelCreating(builder);
+        
+        builder.AddInboxStateEntity();
+        builder.AddOutboxMessageEntity();
+        builder.AddOutboxStateEntity();
     }
 }

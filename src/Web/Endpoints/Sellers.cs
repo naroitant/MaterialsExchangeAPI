@@ -1,5 +1,7 @@
 ﻿using Application.Sellers.Commands.CreateSeller;
 using Application.Sellers.Commands.DeleteSeller;
+using Application.Sellers.Commands.RequestSellerSynchronization;
+using Application.Sellers.Commands.SynchronizeSellers;
 using Application.Sellers.Commands.UpdateMaterialsForSeller;
 using Application.Sellers.Commands.UpdateSeller;
 using Application.Sellers.Queries.GetAllSellers;
@@ -189,5 +191,19 @@ public class Sellers : BaseController
         }
 
         return NoContent();
+    }
+    
+    /// <summary>
+    /// Запрос на синхронизацию
+    /// </summary>
+    /// <response code="200"></response>
+    [HttpPost("sync")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
+    public async Task<IActionResult> SynchronizeSellers()
+    {
+        await Mediator.Send(new RequestSellerSynchronizationCommand());
+
+        return Ok();
     }
 }

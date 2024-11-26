@@ -5,8 +5,10 @@ public class ValidationBehavior<TRequest, TResponse>(
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull
 {
-    public async Task<TResponse> Handle(TRequest request,
-        RequestHandlerDelegate<TResponse> next, CancellationToken token)
+    public async Task<TResponse> Handle(
+        TRequest request,
+        RequestHandlerDelegate<TResponse> next,
+        CancellationToken token)
     {
         if (!validators.Any())
         {

@@ -2,6 +2,7 @@ using Application;
 using Hangfire;
 using Infrastructure;
 using Infrastructure.Middlewares;
+using MessageBroker;
 using Microsoft.AspNetCore.Diagnostics;
 using Serilog;
 using Web;
@@ -13,10 +14,11 @@ var configuration = builder.Configuration;
 // Add services from the assemblies.
 builder.Services.AddApplicationServices(configuration);
 builder.Services.AddInfrastructureServices(configuration);
+builder.Services.AddMessageBroker();
 builder.Services.AddWebServices();
 
-builder.Host.UseSerilog((context, loggerConfiguration) =>
-    loggerConfiguration.ReadFrom.Configuration(context.Configuration));
+// builder.Host.UseSerilog((context, loggerConfiguration) =>
+//     loggerConfiguration.ReadFrom.Configuration(context.Configuration));
 
 var app = builder.Build();
 
@@ -27,6 +29,7 @@ if (app.Environment.IsDevelopment())
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
     });
+    app.UseDeveloperExceptionPage();
 }
 
 app.UseHangfireDashboard();
